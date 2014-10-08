@@ -1,0 +1,57 @@
+
+			<div class="ayuda-minijuego">
+				<div class="titulo">3, 2, 1... ¡Acción!</div>
+				<div class="descripcion">¡Recuerda y repite el orden!</div>
+			</div>
+		
+			<div class="minijuego minijuego-002">
+			
+				<img src="/imatges/minijuego/002/0002.jpg"/>
+			
+				<div id="secuencia"></div>
+				
+				<div class="respuesta" id="respuesta-1"></div>
+				<div class="respuesta" id="respuesta-2"></div>
+				<div class="respuesta" id="respuesta-3"></div>
+				<div class="respuesta" id="respuesta-4"></div>
+				
+				<div class="opcion" id="opcion-4"></div>
+				<div class="opcion" id="opcion-3"></div>
+				<div class="opcion" id="opcion-2"></div>
+				<div class="opcion" id="opcion-1"></div>
+				<div class="opcion" id="opcion-5"></div>
+				<div class="opcion" id="opcion-6"></div>
+				
+				<div class="boto" id="boto-1">BORRAR</div>
+				<div class="boto" id="boto-2">VALIDAR</div>
+			</div>
+			<style>
+				.minijuego-002{width:700px;height:450px;position:relative;}
+				.minijuego-002 #secuencia{width:120px;height:120px;position:absolute;left:290px;top:32px;background:url("/imatges/minijuego/002/juego/secuencia.png") 0 0 no-repeat;}
+				.minijuego-002 .respuesta{width:70px;height:70px;position:absolute;top:184px;}
+				.minijuego-002 #respuesta-1{left:106px;}
+				.minijuego-002 #respuesta-2{left:245px;}
+				.minijuego-002 #respuesta-3{left:385px;}
+				.minijuego-002 #respuesta-4{left:525px;}
+				.minijuego-002 .opcion{width:54px;height:54px;position:absolute;top:285px;border-radius:30px;border:5px solid #777;}
+				.minijuego-002 #opcion-4{left:70px;}
+				.minijuego-002 #opcion-3{left:169px;}
+				.minijuego-002 #opcion-2{left:270px;}
+				.minijuego-002 #opcion-1{left:370px;}
+				.minijuego-002 #opcion-5{left:470px;}
+				.minijuego-002 #opcion-6{left:570px;}
+				.minijuego-002 .boto{position:absolute;top;width:192px;height:24px;top:379px;cursor:pointer;text-align:center;border:4px solid #653e26;font-weight:bold;color:#FFF;padding-top:8px;border-radius:8px;}
+				.minijuego-002 #boto-1{left:74px;background-color:#aaa;}
+				.minijuego-002 #boto-2{left:425px;background-color:#ccc;}
+			</style>
+			<script>
+				jQuery(function(){var resposta=1;var resultat="";setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -120px")},100);setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -240px")},100);setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -360px")},100);setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -480px")},100);setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -600px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -960px")},100);setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -600px")},100);setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -720px")},100);setTimeout(function(){$("#secuencia").attr("style","background-position: 0 13200px");setTimeout(function(){$("#secuencia").attr("style","background-position: 0 -1320px")},100);$(".minijuego-002 .opcion").hover(function(){$(this).css("border-color","#653e26");$(this).css("cursor","pointer")},function(){$(this).css("border-color","#ccc")});$(".opcion").click(function(){if(resposta<5){var opcion=$(this).attr("id").split("-")[1];$("#respuesta-"+resposta).html("<img src='/imatges/minijuego/002/juego/0"+opcion+".png'/>");if(resposta==4)$("#boto-2").attr("style","background-color:green;");resposta++;resultat=resultat.toString()+opcion.toString()}});$("#boto-1").click(function(){resposta=1;$(".respuesta").html("");$("#boto-2").attr("style","background-color:#ccc;");resultat=""});$("#boto-2").click(function(){if(resposta==5){if(resultat==6365)location.href="index.php?p=cocinar&r=6&h=88ccf9a98e8519b2011df33952832f2f";else{location.href="index.php?p=cocinar&r=6&h=1a0a283bfe7c549dee6c638a05200e32"}}})},1500)},1500)},1500)},1500)},1000)},1000)},1000)},1000)},1000)});			</script>
+		<div class="banner4"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- VendeCookies 728 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2196296813774114"
+     data-ad-slot="3240316387"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div><a href="index.php?p=captcha&re=6"><div style="margin-top:15px;" class="boton-naranja recurs-6">¡Me rindo! No consigo pasarme esta prueba.</div></a>

@@ -1,0 +1,580 @@
+
+			<div class="ayuda-minijuego">
+				<div class="titulo">Ahorcado</div>
+				<div class="descripcion">¡Averigua cuál es la palabra misteriosa antes de que te ahorquen!</div>
+			</div>
+		
+			<div class="minijuego minijuego-007">
+
+
+				<div id="lineas"></div>
+				<div class="clear"></div>
+				<img id="ahorcado" src="/imatges/minijuego/007/1.jpg" />
+				<div id="abecedario">
+					<div id="a" onclick="abc('a')">A</div>
+					<div id="b" onclick="abc('b')">B</div>
+					<div id="c" onclick="abc('c')">C</div>
+					<div id="d" onclick="abc('d')">D</div>
+					<div id="e" onclick="abc('e')">E</div>
+					<div id="f" onclick="abc('f')">F</div>
+					<div id="g" onclick="abc('g')">G</div>
+					<div id="h" onclick="abc('h')">H</div>
+					<div id="i" onclick="abc('i')">I</div>
+					<div id="j" onclick="abc('j')">J</div>
+					<div id="k" onclick="abc('k')">K</div>
+					<div id="l" onclick="abc('l')">L</div>
+					<div id="m" onclick="abc('m')">M</div>
+					<div id="n" onclick="abc('n')">N</div>
+					<div id="o" onclick="abc('o')">O</div>
+					<div id="p" onclick="abc('p')">P</div>
+					<div id="q" onclick="abc('q')">Q</div>
+					<div id="r" onclick="abc('r')">R</div>
+					<div id="s" onclick="abc('s')">S</div>
+					<div id="t" onclick="abc('t')">T</div>
+					<div id="u" onclick="abc('u')">U</div>
+					<div id="v" onclick="abc('v')">V</div>
+					<div id="w" onclick="abc('w')">W</div>
+					<div id="x" onclick="abc('x')">X</div>
+					<div id="y" onclick="abc('y')">Y</div>
+					<div id="z" onclick="abc('z')">Z</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<style>
+				.minijuego-007 #ahorcado{float:left;margin-right:10px;padding:5px;border:5px solid #653e26;border-radius:5px;}
+				.minijuego-007 #contenedor{width:500px;height:500px;background-color:#fffff0;}
+				.minijuego-007 #lineas{}
+				.minijuego-007 #lineas div{float:left;text-align:center;font-weight:bold;margin:10px 10px 25px 10px;padding:10px;width:20px;background-color:#e6b062;color:#653e26;border:1px solid #653e26;}
+				.minijuego-007 #abecedario{float:left;padding-top:10px;padding-left:10px;width:226px;height:286px;background-color:#e6b062;border:5px solid #653e26;border-radius:5px;}
+				.minijuego-007 #abecedario div{width:35px;height:25px;padding-top:10px;float:left;background-color:#653e26;text-align:center;font-weight:bold;margin-right:10px;margin-bottom:10px;cursor:pointer;border-radius:2px;color:#FFF;}
+			</style>
+			<script>
+				var esta=false;
+				var palabra=new Array();
+				var cont=0, cont2=0, i=0, n=0, j=0, aleatorio=0;
+				var desabilitarTeclado=false;
+				var lin=new Array();
+
+				aleatorio=Math.floor(Math.random()*20);
+
+				switch(aleatorio){
+			
+						case 0:
+						n=7;
+						
+					
+							palabra[0]='t';
+						
+							palabra[1]='r';
+						
+							palabra[2]='a';
+						
+							palabra[3]='n';
+						
+							palabra[4]='v';
+						
+							palabra[5]='i';
+						
+							palabra[6]='a';
+						
+					
+						break;
+						
+					
+						case 1:
+						n=5;
+						
+					
+							palabra[0]='a';
+						
+							palabra[1]='n';
+						
+							palabra[2]='c';
+						
+							palabra[3]='l';
+						
+							palabra[4]='a';
+						
+					
+						break;
+						
+					
+						case 2:
+						n=8;
+						
+					
+							palabra[0]='l';
+						
+							palabra[1]='a';
+						
+							palabra[2]='v';
+						
+							palabra[3]='a';
+						
+							palabra[4]='d';
+						
+							palabra[5]='o';
+						
+							palabra[6]='r';
+						
+							palabra[7]='a';
+						
+					
+						break;
+						
+					
+						case 3:
+						n=6;
+						
+					
+							palabra[0]='t';
+						
+							palabra[1]='r';
+						
+							palabra[2]='u';
+						
+							palabra[3]='c';
+						
+							palabra[4]='h';
+						
+							palabra[5]='a';
+						
+					
+						break;
+						
+					
+						case 4:
+						n=4;
+						
+					
+							palabra[0]='a';
+						
+							palabra[1]='r';
+						
+							palabra[2]='c';
+						
+							palabra[3]='e';
+						
+					
+						break;
+						
+					
+						case 5:
+						n=9;
+						
+					
+							palabra[0]='c';
+						
+							palabra[1]='a';
+						
+							palabra[2]='s';
+						
+							palabra[3]='q';
+						
+							palabra[4]='u';
+						
+							palabra[5]='i';
+						
+							palabra[6]='l';
+						
+							palabra[7]='l';
+						
+							palabra[8]='o';
+						
+					
+						break;
+						
+					
+						case 6:
+						n=9;
+						
+					
+							palabra[0]='p';
+						
+							palabra[1]='e';
+						
+							palabra[2]='g';
+						
+							palabra[3]='a';
+						
+							palabra[4]='m';
+						
+							palabra[5]='e';
+						
+							palabra[6]='n';
+						
+							palabra[7]='t';
+						
+							palabra[8]='o';
+						
+					
+						break;
+						
+					
+						case 7:
+						n=8;
+						
+					
+							palabra[0]='a';
+						
+							palabra[1]='m';
+						
+							palabra[2]='o';
+						
+							palabra[3]='n';
+						
+							palabra[4]='i';
+						
+							palabra[5]='a';
+						
+							palabra[6]='c';
+						
+							palabra[7]='o';
+						
+					
+						break;
+						
+					
+						case 8:
+						n=7;
+						
+					
+							palabra[0]='f';
+						
+							palabra[1]='i';
+						
+							palabra[2]='a';
+						
+							palabra[3]='m';
+						
+							palabra[4]='b';
+						
+							palabra[5]='r';
+						
+							palabra[6]='e';
+						
+					
+						break;
+						
+					
+						case 9:
+						n=4;
+						
+					
+							palabra[0]='l';
+						
+							palabra[1]='a';
+						
+							palabra[2]='g';
+						
+							palabra[3]='o';
+						
+					
+						break;
+						
+					
+						case 10:
+						n=6;
+						
+					
+							palabra[0]='c';
+						
+							palabra[1]='i';
+						
+							palabra[2]='e';
+						
+							palabra[3]='r';
+						
+							palabra[4]='v';
+						
+							palabra[5]='o';
+						
+					
+						break;
+						
+					
+						case 11:
+						n=9;
+						
+					
+							palabra[0]='a';
+						
+							palabra[1]='r';
+						
+							palabra[2]='r';
+						
+							palabra[3]='i';
+						
+							palabra[4]='e';
+						
+							palabra[5]='s';
+						
+							palabra[6]='g';
+						
+							palabra[7]='a';
+						
+							palabra[8]='r';
+						
+					
+						break;
+						
+					
+						case 12:
+						n=10;
+						
+					
+							palabra[0]='p';
+						
+							palabra[1]='e';
+						
+							palabra[2]='s';
+						
+							palabra[3]='c';
+						
+							palabra[4]='a';
+						
+							palabra[5]='d';
+						
+							palabra[6]='i';
+						
+							palabra[7]='l';
+						
+							palabra[8]='l';
+						
+							palabra[9]='a';
+						
+					
+						break;
+						
+					
+						case 13:
+						n=8;
+						
+					
+							palabra[0]='x';
+						
+							palabra[1]='i';
+						
+							palabra[2]='l';
+						
+							palabra[3]='o';
+						
+							palabra[4]='f';
+						
+							palabra[5]='o';
+						
+							palabra[6]='n';
+						
+							palabra[7]='o';
+						
+					
+						break;
+						
+					
+						case 14:
+						n=8;
+						
+					
+							palabra[0]='m';
+						
+							palabra[1]='a';
+						
+							palabra[2]='c';
+						
+							palabra[3]='a';
+						
+							palabra[4]='r';
+						
+							palabra[5]='r';
+						
+							palabra[6]='o';
+						
+							palabra[7]='n';
+						
+					
+						break;
+						
+					
+						case 15:
+						n=5;
+						
+					
+							palabra[0]='c';
+						
+							palabra[1]='a';
+						
+							palabra[2]='q';
+						
+							palabra[3]='u';
+						
+							palabra[4]='i';
+						
+					
+						break;
+						
+					
+						case 16:
+						n=4;
+						
+					
+							palabra[0]='o';
+						
+							palabra[1]='n';
+						
+							palabra[2]='i';
+						
+							palabra[3]='x';
+						
+					
+						break;
+						
+					
+						case 17:
+						n=7;
+						
+					
+							palabra[0]='t';
+						
+							palabra[1]='r';
+						
+							palabra[2]='a';
+						
+							palabra[3]='c';
+						
+							palabra[4]='t';
+						
+							palabra[5]='o';
+						
+							palabra[6]='r';
+						
+					
+						break;
+						
+					
+						case 18:
+						n=6;
+						
+					
+							palabra[0]='i';
+						
+							palabra[1]='n';
+						
+							palabra[2]='g';
+						
+							palabra[3]='l';
+						
+							palabra[4]='e';
+						
+							palabra[5]='s';
+						
+					
+						break;
+						
+					
+						case 19:
+						n=6;
+						
+					
+							palabra[0]='t';
+						
+							palabra[1]='a';
+						
+							palabra[2]='p';
+						
+							palabra[3]='e';
+						
+							palabra[4]='t';
+						
+							palabra[5]='e';
+						
+					
+						break;
+						
+					
+				}
+
+				function abc(cad){
+					if(!$("#"+cad).hasClass("marcado")){
+						if(desabilitarTeclado==false){
+							document.getElementById(cad).style.backgroundColor='#ffffff';
+							document.getElementById(cad).style.color='#653e26';
+							esta=false;
+							ganaste=false;
+							for(i=0;i<n;i++){
+								if(cad==palabra[i]){
+									document.getElementById('l'+i).innerHTML=cad.toUpperCase();
+									esta=true;
+									cont2++;
+								}else{  
+									if(esta!=true){
+										esta=false;
+									}
+								}
+							}//for
+							if(esta==false){
+								cont++;
+								dibujo(cont);
+							}
+							if(cont2==n){
+								desabilitarTeclado=true;
+								location.href = "index.php?p=cocinar&r=5&h=b9b95b18f155ea0c4d365ad4f973fe67";
+							}
+						}else{ 
+							location.href = "index.php?p=cocinar&r=5&h=6e7d5d259be7bf56ed79029c4e621f44";
+						}
+					}
+					$("#"+cad).addClass("marcado");
+				}//finfuncion
+
+				function dibujo(c){
+					switch(c){
+						case 1:
+						document.getElementById('ahorcado').src="/imatges/minijuego/007/2.jpg";
+						break;
+						case 2:
+						document.getElementById('ahorcado').src="/imatges/minijuego/007/3.jpg";
+						break;
+						case 3:
+						document.getElementById('ahorcado').src="/imatges/minijuego/007/4.jpg";
+						break;
+						case 4:
+						document.getElementById('ahorcado').src="/imatges/minijuego/007/5.jpg";
+						break;
+						case 5:
+						document.getElementById('ahorcado').src="/imatges/minijuego/007/6.jpg";
+						break;
+						case 6:
+						document.getElementById('ahorcado').src="/imatges/minijuego/007/7.jpg";
+						break;
+						case 7:
+						document.getElementById('ahorcado').src="/imatges/minijuego/007/8.jpg";
+						break;
+						case 8:
+						desabilitarTeclado=true;
+						location.href = "index.php?p=cocinar&r=5&h=83fa5a432ae55c253d0e60dbfa716723";
+						break;  
+					}
+				}
+
+				function lineas(){
+					for(j=0; j<n; j++){
+						lin[j]='<div id="l'+j+'">__</div>';
+					}
+					for(j=0; j<n; j++){
+						document.getElementById('lineas').innerHTML=document.getElementById('lineas').innerHTML+lin[j];
+					}
+				}
+				
+				jQuery(function(){
+					lineas();
+				});
+			</script>
+		<div class="banner4"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- VendeCookies 728 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2196296813774114"
+     data-ad-slot="3240316387"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div><a href="index.php?p=captcha&re=5"><div style="margin-top:15px;" class="boton-naranja recurs-5">¡Me rindo! No consigo pasarme esta prueba.</div></a>

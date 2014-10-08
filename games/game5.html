@@ -1,0 +1,99 @@
+
+			<div class="ayuda-minijuego">
+				<div class="titulo">Tiro a la cookie</div>
+				<div class="descripcion">Tienes que ser capaz de coger 5 cookies de chocolate. ¡Pero ojo! Si coges una incorrecta tendrás que volver a empezar.</div>
+			</div>
+		
+			<div class="minijuego minijuego-005">
+				<div class="resultado">0</div>
+				<img src="/imatges/minijuego/005/ok.png" class="circulo verde"/>
+			</div>
+			<style>
+				.minijuego-005{width:700px;height:450px;position:relative;background:url("/imatges/disseny/fondo-perfil.jpg");border:5px solid #653e26;border-radius:10px;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+				
+				.minijuego-005 .circulo{position:absolute;left:100px;top:100px;width:50px;height:50px;border-radius:24px;cursor:pointer;}
+				.minijuego-005 .resultado{position:absolute;left:5px;top:5px;width:48px;height:38px;border-radius:24px;background-color:#653e26;color:#fff;text-align:center;font-size:22px;fnot-weight:bold;padding-top:10px;}
+			</style>
+			<script>
+			
+				function getLeft(){
+					return Math.floor((Math.random() * 601) + 51);
+				}
+				function getTop(){
+					return Math.floor((Math.random() * 351) + 51);
+				}
+				function getVelocidad(){
+					return Math.floor((Math.random() * 1200) + 1200);
+				}				
+				function pintaClass(){
+					$(".circulo").removeClass("rojo");
+					$(".circulo").removeClass("verde");
+					if(Math.floor((Math.random() * 2) + 1) == 1){
+						$(".circulo").addClass("rojo");
+						$(".circulo").attr("src","/imatges/minijuego/005/ko.png");
+					}else{
+						$(".circulo").addClass("verde");
+						$(".circulo").attr("src","/imatges/minijuego/005/ok.png");
+					}
+				}
+				
+				function borraCercle(){
+					var temps = getVelocidad();
+					setTimeout(function() {
+						$(".circulo").animate({
+							width: "0px",
+							height: "0px",
+							top: "+=25px",
+							left: "+=25px"
+						}, temps, function(){
+						});
+						pintaCercle(temps);
+					}, 100);
+				}
+				function pintaCercle(temps){
+					setTimeout(function() {
+						pintaClass();
+						$(".circulo").attr("style","width:50px;height:50px;left:"+getLeft()+"px;top:"+getTop()+"px;");
+						borraCercle();
+					}, temps+100);
+				}
+			
+				jQuery(function(){
+					borraCercle();
+					var resultado = 0;
+					var ultimo = 0;
+					$(".circulo").click(function(){
+						if($(this).hasClass("verde")){
+							if(($.now()-ultimo)>1000){
+								ultimo = $.now();
+								$(".minijuego-004").css("background","green");
+								setTimeout(function() {
+									$(".minijuego-004").css("background","url('/imatges/disseny/fondo-perfil.jpg')");
+								}, 100);
+								resultado++;
+								$(".resultado").html(resultado);
+								if(resultado==5 || resultado=="5"){
+									location.href = "index.php?p=cocinar&r=6&h=7fe6f43b1fa74eaab7e0388b4c24c010";
+								}
+							}
+						}else{
+							$(".minijuego-004").css("background","red");
+							setTimeout(function() {
+								$(".minijuego-004").css("background","url('/imatges/disseny/fondo-perfil.jpg')");
+							}, 100);
+							resultado=0;
+							$(".resultado").html(resultado);
+						}
+					});
+
+				});
+			</script>
+		<div class="banner4"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- VendeCookies 728 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2196296813774114"
+     data-ad-slot="3240316387"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div><a href="index.php?p=captcha&re=6"><div style="margin-top:15px;" class="boton-naranja recurs-6">¡Me rindo! No consigo pasarme esta prueba.</div></a>
