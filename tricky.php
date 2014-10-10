@@ -19,7 +19,7 @@ $command = '';
 $user = '';
 $pass = '';
 $email = '';
-$referer = '';
+$referer = 'dvil88';
 
 $argv = $_SERVER['argv'];
 foreach($argv as $k=>$c){
@@ -103,10 +103,14 @@ switch($command){
 		tricky_cook($user,$pass);
 		break;
 	case 'register':
-		// tricky_register($user,$pass,$email);
+		$reg = tricky_register($user,$pass,$email,$referer);
+		if($reg['errorCode']){
+			echo 'ERROR! '.$reg['errorCode'],PHP_EOL;
+			exit;
+		}
 
 		// Save config file
-		// file_put_contents('resources/config/', data);
+		file_put_contents('resources/config/'.$user,json_encode(array('user'=>$user,'pass'=>$pass)));
 		break;
 	case 'stats':
 		// tricky_getStats

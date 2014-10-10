@@ -19,7 +19,7 @@ function tricky_login($user,$pass){
 	return array('errorCode'=>0);
 }
 
-function tricky_register($user,$pass,$email,$referer = 'dvil88'){
+function tricky_register($user,$pass,$email,$referer){
 	echo 'Registrando...',PHP_EOL;
 	$data['post'] = array(
 		'email'=>$email,
@@ -34,10 +34,9 @@ function tricky_register($user,$pass,$email,$referer = 'dvil88'){
 	$data = html_petition($url,$data);
 
 	if(preg_match('/id="confirmacion[^<]+<p>([^<]+)/msi',$data['pageContent'],$m)){
-		echo date('H:i:s - '),$m[1];
-		return false;
+		return array('errorCode'=>1,'errorDescription'=>$m[1]);
 	}
-	return true;
+	return array('errorCode'=>0);
 }
 
 function tricky_getStats(){
