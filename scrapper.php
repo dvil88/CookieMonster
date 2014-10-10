@@ -56,9 +56,10 @@ do{
 		$url = 'http://www.vendecookies.com/ws/ObtainResource.php';
 		$game = $data = html_petition($url,$data);
 		
-		sleep(rand(2,8));
+		sleep(rand(8,20));
 		
 		if(preg_match('/minijuego minijuego-001/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 1: ';
 			preg_match('/MINI-([0-9]+)\.png/msi',$data['pageContent'],$ing);
 			$paths = array(
 				'0001'=>array(1=>4,2=>2,3=>1,4=>3),
@@ -127,8 +128,14 @@ do{
 			asort($diffs);
 			$image = key($diffs);
 
+			copy('game1.jpg','game1/processed/'.$image.'-'.time().'.jpg');
+
 			if($diffs[$image] > 0){
-				if(strlen($diffs[$image]) > 2){print_r($diffs);}
+				if(strlen($diffs[$image]) > 2){
+					print_r($diffs);
+					copy('game1.jpg','game1/error/'.time().'.jpg');
+					// exit;
+				}
 				else{copy('game1.jpg','game1/'.$image.'.jpg');}
 			}
 
@@ -146,16 +153,19 @@ do{
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
 		}elseif(preg_match('/minijuego minijuego-002/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 2: ';
 			preg_match('/if\(resultat==[0-9]+\)location\.href="([^"]+)/msi',$data['pageContent'],$win);
 			$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
 		}elseif(preg_match('/minijuego minijuego-003/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 3: ';
 			preg_match('/if \(ImgFound == ImgSource\.length\) {\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);
 			$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
 		}elseif(preg_match('/minijuego minijuego-004/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 4: ';
 			if(!file_exists('games/game4.html')){file_put_contents('games/game4.html',$data['pageContent']);}
 
 			$cookieCount = array(
@@ -214,6 +224,7 @@ do{
 				$c = trim(shell_exec('compare -metric AE game4.png game4/00'.$i.'.png diff.png 2>&1'));
 				if($c == 0){$image = '00'.$i;break;}
 			}
+			copy('game4.png','game4/processed/'.$image.'-'.time().'.png');
 
 			preg_match('/url\("\/imatges\/minijuego\/004\/([0-9]+).*?\.minijuego-004 \.bandeja-2{background:url\("\/imatges\/minijuego\/004\/([0-9]+)/msi',$data['pageContent'],$plates);
 
@@ -227,21 +238,25 @@ do{
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
 		}elseif(preg_match('/minijuego minijuego-005/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 5: ';
 			preg_match('/location.href = "([^"]+)/msi',$data['pageContent'],$win);
 			$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
 		}elseif(preg_match('/minijuego minijuego-006/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 6: ';
 			preg_match('/if\(resultado==[^\)]+\){\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);
 			$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
 		}elseif(preg_match('/minijuego minijuego-007/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 7: ';
 			preg_match('/desabilitarTeclado=true;\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);
 			$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
 		}elseif(preg_match('/minijuego minijuego-008/msi',$data['pageContent'])){
+			echo date('H:i:s - ').'Juego 8: ';
 			$order = array(
 				'0001'=>'4,6,8,10,1',
 				'0002'=>'4,10,5,3,1',
@@ -301,7 +316,6 @@ do{
 			$d = html_petition($url,$d);
 			file_put_contents('game8.jpg',$d['pageContent']);
 
-
 			$diffs = array();
 			foreach($order as $k=>$v){
 				$c = trim(shell_exec('compare -metric AE -fuzz 30% game8.jpg game8/'.$k.'.jpg diff.jpg 2>&1'));
@@ -312,8 +326,14 @@ do{
 			asort($diffs);
 			$image = key($diffs);
 
+			copy('game8.jpg','game8/processed/'.$image.'-'.time().'.jpg');
+
 			if($diffs[$image] > 0){
-				if(strlen($diffs[$image]) > 2){print_r($diffs);}
+				if(strlen($diffs[$image]) > 2){
+					print_r($diffs);
+					copy('game8.jpg','game8/error/'.time().'.jpg');
+					// exit;
+				}
 				else{copy('game8.jpg','game8/'.$image.'.jpg');}
 			}
 
@@ -336,6 +356,7 @@ do{
 				// break 2;
 			}
 		}elseif(preg_match('/recollir.*?onclick="location.href = \'([^\']+)/msi',$data['pageContent'],$win)){
+			echo date('H:i:s - ').'Gratis:  ';
 			$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 			$url = 'http://www.vendecookies.com/'.$win[1];
 			$data = html_petition($url,$data);
@@ -345,14 +366,15 @@ do{
 			continue 2;
 		}
 		
-		/*
-		if(preg_match('/<div class="recurs">([^<]+)/msi',$data['pageContent'],$prize)){echo date('H:i:s - ').$prize[1],PHP_EOL;}
+		
+		if(preg_match('/<div class="recurs">Has conseguido ([^<]+)/msi',$data['pageContent'],$prize)){echo $prize[1],PHP_EOL;}
 		else{
-			echo date('H:i:s - ').'Ingredientes no encontrados',PHP_EOL;
+			// echo date('H:i:s - ').'Ingredientes no encontrados',PHP_EOL;
+			echo 'ERROR!!',PHP_EOL;
+			// exit;
 		}
-		*/
 
-		sleep(rand(1,3));
+		sleep(rand(3,5));
 
 		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 		$url = 'http://www.vendecookies.com/index.php?p=cocinar';
@@ -399,29 +421,33 @@ do{
 		}
 
 
-		// sleep(46);
+		echo date('H:i:s - ').'Cookies: ';
+		sleep(46);
+		/*
 		echo 'Cocinando...',PHP_EOL;
 		for($i=1;$i<47;$i++){
 			showStatus($i,46,130);
 			sleep(1);
 		}
+		*/
 
 		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 		$url = 'http://www.vendecookies.com/'.$win[1];
 		$data = html_petition($url,$data);
 
 		if(preg_match('/imatges\/disseny\/ko-[0-9]+\.png/msi',$data['pageContent'])){
-			echo date('H:i:s - ').'Error cocinando',PHP_EOL;
+			echo 'Error cocinando',PHP_EOL;
 			if(isset($captcha)){file_put_contents('captchas/error/'.$res.'.jpg',$im['pageContent']);}
-			continue;
+			// exit;
 		}
 
 		if(!preg_match('/<div class="recurs">[^0-9]*([0-9]+)/msi',$data['pageContent'],$prize)){
-			echo date('H:i:s - ').'Cookies no encontradas',PHP_EOL;
-			continue;
+			echo 'Cookies no encontradas',PHP_EOL;
+			// exit;
 		}
 		$GLOBALS['totalCookies'] += $prize[1];
-		echo date('H:i:s - '),'Cookies: ',$prize[1],' | Total: ',$GLOBALS['totalCookies'],PHP_EOL;
+		// echo date('H:i:s - '),'Cookies: ',$prize[1],' | Total: ',$GLOBALS['totalCookies'],PHP_EOL;
+		echo $prize[1],' | Total: ',$GLOBALS['totalCookies'],PHP_EOL;
 
 		checkGifts();
 
