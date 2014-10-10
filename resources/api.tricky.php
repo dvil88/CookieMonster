@@ -64,12 +64,13 @@ function tricky_openGifts(){
 	preg_match_all('/<a href="(index.php\?p=regalos&idr=[0-9]+)">/msi',$data['pageContent'],$m);
 
 	foreach($m[1] as $g){
+		sleep(1);
 		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 		$url = 'http://www.vendecookies.com/'.$g;
 		$data = html_petition($url,$data);
 	}
 
-	// echo date('H:i:s - ').count($m[1]).' regalos abiertos',PHP_EOL;
+	echo date('H:i:s - ').count($m[1]).' regalos abiertos',PHP_EOL;
 }
 
 function tricky_cook($user,$pass){
@@ -177,6 +178,9 @@ function tricky_cook($user,$pass){
 		// A cocinar galletas
 		tricky_cookie($data);
 
+		// Abrir regalos
+		tricky_openGifts();
+
 	}while(true);
 }
 
@@ -281,7 +285,7 @@ function tricky_game001($data){
 			exit;
 		}else{
 			echo 'Cambiar imagen de juego 1',PHP_EOL;
-			// copy('game1.jpg','resources/game1/'.$image.'.jpg');
+			copy('game1.jpg','resources/game1/error/'.$image.'.jpg');
 		}
 	}
 
@@ -517,7 +521,7 @@ function tricky_game008($data){
 		}
 		else{
 			echo 'Cambiar imagen de juego 8',PHP_EOL;
-			// copy('game8.jpg','resources/game8/'.$image.'.jpg');
+			copy('game8.jpg','resources/game8/error/'.$image.'.jpg');
 		}
 	}
 
