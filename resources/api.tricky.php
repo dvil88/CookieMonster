@@ -136,9 +136,16 @@ function tricky_cook($user,$pass){
 		// Control de errores de pageContent
 		if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
+		// Activar Happy hour
+		$happyHour = false;
+		if(preg_match('/<div class="happyhour"><img src="\/imatges\/disseny\/happyhour\/hh-([0-9]+)/msi',$data['pageContent'],$m)){echo date('H:i:s - ')."\033[0;34mHappy Hour!!\033[0m";$happyHour = $m[1];}
+
 		// Buscamos los ingredientes que nos faltan para hacer galletas
-		if(preg_match_all('/class="ingredient[^"]+falta" id="ing-([0-9]+)/msi',$data['pageContent'],$m)){
+		if(preg_match_all('/class="ingredient[^"]+falta" id="ing-([0-9]+)/msi',$data['pageContent'],$m) || $happyHour !== false){
 			// Faltan ingredientes para cocinar galletas
+
+			// Si hay happy hour de un ingrediente lo único que hacemos es obtener ese ingrediente
+			if($happyHour !== false){$m[1] = array($happyHour);}
 
 			foreach($m[1] as $r){
 				// Volvemos a entrar en la cocina para empezar a cocinar
