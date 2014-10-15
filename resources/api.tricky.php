@@ -122,9 +122,6 @@ function tricky_cook($user,$pass){
 
 
 	do{
-		// Si llevamos más tiempo del necesario paramos
-		if(time() > $endTime){break;}
-
 		// Esperamos 1 segundo antes de ir a cocinar
 		sleep(1);
 
@@ -138,7 +135,14 @@ function tricky_cook($user,$pass){
 
 		// Activar Happy hour
 		$happyHour = false;
-		if(preg_match('/<div class="happyhour"><img src="\/imatges\/disseny\/happyhour\/hh-([0-9]+)/msi',$data['pageContent'],$m)){echo date('H:i:s - ')."\033[0;34mHappy Hour!!\033[0m";$happyHour = $m[1];}
+		if(preg_match('/<div class="happyhour"><img src="\/imatges\/disseny\/happyhour\/hh-([0-9]+)/msi',$data['pageContent'],$m)){
+			echo date('H:i:s - ')."\033[0;34mHappy Hour!!\033[0m";
+			$happyHour = $m[1];
+		}
+
+		// Si llevamos más tiempo del necesario y no estamos en Happy Hour paramos
+		if(time() > $endTime && $happyHour === false){break;}
+
 
 		// Buscamos los ingredientes que nos faltan para hacer galletas
 		if(preg_match_all('/class="ingredient[^"]+falta" id="ing-([0-9]+)/msi',$data['pageContent'],$m) || $happyHour !== false){
@@ -156,7 +160,7 @@ function tricky_cook($user,$pass){
 				// Control de errores de pageContent
 				if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
-				if(preg_match('/<div id="confirmacion/msi',$data['pageContent'])){
+				if(preg_match('/<div id="confirmacion/msi',$data['pageContent']) && $happyHour === false){
 					sleep(2);
 					tricky_openGifts();
 					continue;
@@ -633,102 +637,86 @@ function tricky_game010($data){
 	if(!isset($d['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 	$singles = array(
-		'00001'=>'1',
-		'00002'=>'4',
-		'00003'=>'8',
-		'00004'=>'5',
-		'00005'=>'7',
-		'00006'=>'6',
-		'00007'=>'6',
-		'00008'=>'5',
-		'00009'=>'8',
-		'00010'=>'7',
-		'00011'=>'8',
-		'00012'=>'8',
-		'00013'=>'7',
-		'00014'=>'8',
-		'00015'=>'2',
-		'00016'=>'2',
-		'00017'=>'7',
-		'00018'=>'6',
-		'00019'=>'2',
-		'00020'=>'5',
-		'00021'=>'3',
-		'00022'=>'8',
-		'00023'=>'6',
-		'00024'=>'7',
-		'00025'=>'8',
-		'00026'=>'6',
-		'00027'=>'6',
-		'00028'=>'2',
-		'00029'=>'1',
-		'00030'=>'8',
-		'00031'=>'1',
-		'00032'=>'3',
-		'00033'=>'6',
-		'00034'=>'4',
-		'00035'=>'6',
-		'00036'=>'3',
-		'00037'=>'8',
-		'00038'=>'1',
-		'00039'=>'5',
-		'00040'=>'2',
-		'00041'=>'7',
-		'00042'=>'1',
-		'00043'=>'5',
-		'00044'=>'5',
-		'00045'=>'2',
-		'00046'=>'3',
-		'00047'=>'2',
-		'00048'=>'6',
-		'00049'=>'7',
-		'00050'=>'2',
-		'00051'=>'7',
-		'00052'=>'7',
-		'00053'=>'2',
-		'00054'=>'8',
-		'00055'=>'5',
-		'00056'=>'5',
-		'00057'=>'6',
-		'00058'=>'3',
-		'00059'=>'6',
-		'00060'=>'2',
-		'00062'=>'2',
-		'00063'=>'3',
-		'00064'=>'7',
-		'00065'=>'4',
-		'00066'=>'8',
-		'00067'=>'5',
-		'00068'=>'1',
-		'00069'=>'1',
-		'00070'=>'4',
-		'00071'=>'8',
-		'00072'=>'7',
-		'00073'=>'5',
-		'00074'=>'8',
-		'00076'=>'3',
-		'00077'=>'7',
-		'00079'=>'4',
-		'00080'=>'6',
-		'00081'=>'7',
-		'00082'=>'5',
-		'00083'=>'1',
-		'00084'=>'3',
-		'00085'=>'7',
-		'00086'=>'5',
-		'00087'=>'7',
-		'00088'=>'4',
-		'00090'=>'1',
-		'00091'=>'1',
-		'00092'=>'4',
-		'00093'=>'5',
-		'00094'=>'1',
-		'00095'=>'3',
-		'00096'=>'2',
-		'00097'=>'5',
-		'00098'=>'1',
-		'00099'=>'7',
-		'00100'=>'4',
+		'0001'=>'4',
+		'0002'=>'4',
+		'0003'=>'4',
+		'0004'=>'4',
+		'0005'=>'4',
+		'0006'=>'4',
+		'0007'=>'4',
+		'0008'=>'4',
+		'0009'=>'4',
+		'0010'=>'4',
+		'0011'=>'5',
+		'0012'=>'5',
+		'0013'=>'5',
+		'0014'=>'5',
+		'0014'=>'5',
+		'0015'=>'5',
+		'0017'=>'5',
+		'0018'=>'5',
+		'0019'=>'5',
+		'0020'=>'5',
+		'0021'=>'1',
+		'0022'=>'1',
+		'0023'=>'1',
+		'0024'=>'1',
+		'0025'=>'1',
+		'0026'=>'1',
+		'0027'=>'1',
+		'0028'=>'1',
+		'0029'=>'1',
+		'0030'=>'1',
+		'0031'=>'7',
+		'0032'=>'7',
+		'0033'=>'7',
+		'0034'=>'7',
+		'0035'=>'7',
+		'0036'=>'7',
+		'0037'=>'7',
+		'0038'=>'7',
+		'0039'=>'7',
+		'0040'=>'7',
+		'0041'=>'3',
+		'0042'=>'3',
+		'0043'=>'3',
+		'0044'=>'3',
+		'0045'=>'3',
+		'0046'=>'3',
+		'0047'=>'3',
+		'0048'=>'3',
+		'0049'=>'3',
+		'0050'=>'3',
+		'0051'=>'8',
+		'0052'=>'8',
+		'0053'=>'8',
+		'0054'=>'8',
+		'0055'=>'8',
+		'0056'=>'8',
+		'0057'=>'8',
+		'0058'=>'8',
+		'0059'=>'8',
+		'0060'=>'8',
+		'0061'=>'2',
+		'0062'=>'2',
+		'0063'=>'2',
+		'0064'=>'2',
+		'0065'=>'2',
+		'0066'=>'2',
+		'0067'=>'2',
+		'0068'=>'2',
+		'0069'=>'2',
+		'0070'=>'2',
+		'0071'=>'6',
+		'0072'=>'6',
+		'0073'=>'6',
+		'0074'=>'6',
+		'0075'=>'6',
+		'0076'=>'6',
+		'0077'=>'6',
+		'0078'=>'6',
+		'0079'=>'6',
+		'0080'=>'6',
 	);
 
 	file_put_contents('game10.jpg',$d['pageContent']);
@@ -736,7 +724,7 @@ function tricky_game010($data){
 
 	$diffs = array();
 	foreach($singles as $k=>$v){
-		$c = trim(shell_exec('compare -metric AE -fuzz 20% crop10.jpg resources/game10/'.$k.'.jpg /dev/null 2>&1'));
+		$c = trim(shell_exec('compare -metric AE -fuzz 50% crop10.jpg resources/game10/'.$k.'.jpg /dev/null 2>&1'));
 		$diffs[$k] = $c;
 		if($c == 0){break;}
 	}
@@ -747,34 +735,153 @@ function tricky_game010($data){
 	copy('game10.jpg','resources/game10/processed/'.$image.'-'.time().'.jpg');
 
 	if($diffs[$image] > 0){
-		if($diffs[$image] > 50){
+		if($diffs[$image] > 100){
 			//print_r($diffs);
 			echo "\033[0;31mError en juego 10\033[0m",PHP_EOL;
 			copy('crop10.jpg','resources/game10/error/'.time().'.jpg');
 			return false;
 			//exit;
-		}else{
-			echo 'Cambiar imagen de juego 10'.PHP_EOL;
-			// echo 'Puntuación: '.$diffs[$image].PHP_EOL;
-			// echo 'Imagen: '.$image.PHP_EOL;
-			copy('crop10.jpg','resources/game10/error/'.$image.'.jpg');
-			// file_put_contents('resources/game10/error/'.$image.'.html',$data['pageContent']);
 		}
+		echo 'Cambiar imagen de juego 10. '.$image.PHP_EOL;
+		// echo 'Puntuación: '.$diffs[$image].PHP_EOL;
+		// echo 'Imagen: '.$image.PHP_EOL;
+		copy('crop10.jpg','resources/game10/'.$image.'.jpg');
+		// file_put_contents('resources/game10/error/'.$image.'.html',$data['pageContent']);
+		
 	}
 
-	preg_match('/<div class="opcio opcio-'.$singles[$image].'" onclick=\'location.href = "([^"]+)/msi',$data['pageContent'],$win);
+	if(preg_match('/<div class="opcio opcio-'.$singles[$image].'" onclick=\'location.href = "([^"]+)/msi',$data['pageContent'],$win)){
+		// Tiempo de resolución del juego
+		sleep(rand(8,15));
 
-	// Tiempo de resolución del juego
-	sleep(rand(8,15));
+		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
+		$url = 'http://www.vendecookies.com/'.$win[1];
+		$data = html_petition($url,$data);
 
-	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
-	$url = 'http://www.vendecookies.com/'.$win[1];
-	$data = html_petition($url,$data);
-
-	return $data;
+		return $data;
+	}else{
+		echo 'Error emparejando galletas'.PHP_EOL;
+		exit;
+	}
 }
 
 function tricky_game011($data){
+	$d['cookieFile']['file'] = $GLOBALS['config']['cookie'];
+	$url = 'http://www.vendecookies.com/imatgeminijoc.php';
+	$d = html_petition($url,$d);
+
+	// Control de errores de pageContent
+	if(!isset($d['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+
+	file_put_contents('game11.jpg',$d['pageContent']);
+
+	$weights = array(
+		'0001'=>'1',
+		'0002'=>'2',
+		'0003'=>'1',
+		'0004'=>'2',
+		'0005'=>'1',
+		'0006'=>'1',
+		'0007'=>'1',
+		'0008'=>'2',
+		'0009'=>'2',
+		'00010'=>'1',
+		'00011'=>'2',
+		'00012'=>'1',
+		'00013'=>'2',
+		'00014'=>'2',
+		'00015'=>'1',
+		'00016'=>'2',
+		'00017'=>'1',
+		'00018'=>'2',
+		'00019'=>'1',
+		'00020'=>'2',
+		'00021'=>'2',
+		'00022'=>'1',
+		'00023'=>'2',
+		'00024'=>'1',
+		'00025'=>'1',
+		'00026'=>'2',
+		'00027'=>'2',
+		'00028'=>'1',
+		'00029'=>'1',
+		'00030'=>'2',
+		'00031'=>'1',
+		'00032'=>'2',
+		'00033'=>'1',
+		'00034'=>'2',
+		'00035'=>'1',
+		'00036'=>'2',
+		'00037'=>'1',
+		'00038'=>'2',
+		'00039'=>'1',
+		'00040'=>'2',
+		'00041'=>'1',
+		'00042'=>'1',
+		'00043'=>'2',
+		'00044'=>'1',
+		'00045'=>'1',
+		'00046'=>'1',
+		'00047'=>'2',
+		'00048'=>'1',
+		'00049'=>'2',
+		'00050'=>'1',
+		'00051'=>'2',
+		'00052'=>'1',
+		'00053'=>'2',
+		'00054'=>'1',
+		'00055'=>'1',
+		'00056'=>'2',
+		'00057'=>'1',
+		'00058'=>'2',
+		'00059'=>'2',
+		'00060'=>'1',
+	);
+
+	$diffs = array();
+	foreach($weights as $k=>$v){
+		$c = trim(shell_exec('compare -metric AE -fuzz 50% game11.jpg resources/game11/'.$k.'.jpg /dev/null 2>&1'));
+		$diffs[$k] = $c;
+		if($c == 0){break;}
+	}
+
+	asort($diffs);
+	$image = key($diffs);
+
+	copy('game11.jpg','resources/game11/processed/'.$image.'-'.time().'.jpg');
+
+	if($diffs[$image] > 0){
+		if($diffs[$image] > 100){
+			//print_r($diffs);
+			echo "\033[0;31mError en juego 11\033[0m",PHP_EOL;
+			copy('game11.jpg','resources/game11/error/'.time().'.jpg');
+			return false;
+			//exit;
+		}
+		echo 'Cambiar imagen de juego 11. '.$image.PHP_EOL;
+		// echo 'Puntuación: '.$diffs[$image].PHP_EOL;
+		// echo 'Imagen: '.$image.PHP_EOL;
+		copy('game11.jpg','resources/game11/'.$image.'.jpg');
+		// file_put_contents('resources/game11/error/'.$image.'.html',$data['pageContent']);
+		
+	}
+
+	if(preg_match('/bascula-'.$weights[$image].'" onclick=\'location.href = "([^\"]+)/msi',$data['pageContent'],$win)){
+		// Tiempo de resolución del juego
+		sleep(rand(3,8));
+
+		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
+		$url = 'http://www.vendecookies.com/'.$win[1];
+		$data = html_petition($url,$data);
+
+		return $data;
+	}else{
+		echo 'Error pesando galletas'.PHP_EOL;
+		exit;
+	}
+}
+/*
+function tricky_game011_old($data){
 	$d['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 	$url = 'http://www.vendecookies.com/imatgeminijoc.php';
 	$d = html_petition($url,$d);
@@ -812,7 +919,7 @@ function tricky_game011($data){
 		exit;
 	}
 }
-
+*/
 /* Cocinar galletas */
 function tricky_cookie($data){
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
