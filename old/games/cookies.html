@@ -1,0 +1,34 @@
+
+			<div class="ayuda-minijuego">
+				<div class="titulo">Cocinando cookies</div>
+				<div class="descripcion">¡Dale al play y espera 45 segundos para recoger las cookies recién hechas!</div>
+			</div>
+		<div id="player"></div>
+				
+				<script>
+					var first = 0;
+					(function() {
+						var e = document.createElement("script"); e.async = true;
+						e.src = document.location.protocol + "//api.dmcdn.net/all.js";
+						var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(e, s);
+					}());
+
+					window.dmAsyncInit = function(){
+						var player = DM.player("player", {video: "x26sz2w", width: "853", height: "480", params: {logo:0,hideInfos:1,syndication:"213258",autoplay:1,related:0}});
+
+						player.addEventListener("play", function(e){
+							e.target.play();
+							cronocookies(45,11,0);
+						});
+					};
+				</script>
+				
+		<div class="captcha">
+			<form method="POST" id="captcha" name="captcha" action="/index.php?p=cocinar&r=1&h=69f62956429865909921fa916d61c1f8">
+				<div class="imagen"><img src="/captcha.php"></div>
+				<div class="texto"><input type="text" name="texto" id="captchain" placeholder="Escribe aquí lo que ves en la imagen."></div>
+				<script>$("#captchain").focus();$("#captcha").submit(function(){if($(".enviar").is(":visible"))return true;else return false;});</script>
+				<div class="enviar" style="display:none;"><input type="submit" name="enviar" value="Recoger"/></div>
+			</form>
+		</div>
+		<div class="clear"></div><div id='crono'><span>45</span> segundos</div>

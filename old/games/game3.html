@@ -1,0 +1,150 @@
+
+			<div class="ayuda-minijuego">
+				<div class="titulo">Cada oveja con su pareja</div>
+				<div class="descripcion">Haz parejas para eliminar todas las cartas.</div>
+			</div>
+		
+			<div class="minijuego minijuego-003">
+				<div id="picbox">
+				  <span id="boxbuttons">
+					<span class="button contador">
+					  <span id="counter">0</span>
+					  Clics
+					</span>
+					<span class="button">
+					  <a onclick="ResetGame();">REINICIAR</a>
+					</span> 
+				  </span>
+				  <div id="boxcard"></div>
+				</div>
+				<div clas="clear"></div>
+			</div>
+			<div clas="clear"></div>
+			<style>
+				.minijuego-003{ width:700px;height:360px;background-color:#047d6a;border:6px solid #653e26;border-radius:20px;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+				#picbox { width: 700px;height: 450px;}
+				#boxcard {z-index: 1;margin: 10px 0 0;}
+				#boxcard div{float: left;width: 90px;height: 124px;margin: 13px;background:url("/imatges/minijuego/003/carta-00.png");cursor: pointer;border-radius: 10px;z-index: 2;}
+				#boxcard div img {display: none;border-radius: 10px;z-index: 3;}
+				#boxbuttons {text-align: center;margin: 20px;display: block;}
+				#boxbuttons .button {text-transform: uppercase;background:#653e26;padding:5px 10px;margin:5px;border-radius:10px;cursor:pointer;color:#FFF;}
+				#boxbuttons .button.contador{cursor:auto;background-color:#e6b062;}
+			</style>
+			<script>
+				var BoxOpened = "";
+				var ImgOpened = "";
+				var Counter = 0;
+				var ImgFound = 0;
+
+				var Source = "#boxcard";
+
+				var ImgSource = [
+				  "/imatges/minijuego/003/carta-01.png",
+				  "/imatges/minijuego/003/carta-02.png",
+				  "/imatges/minijuego/003/carta-03.png",
+				  "/imatges/minijuego/003/carta-04.png",
+				  "/imatges/minijuego/003/carta-05.png",
+				  "/imatges/minijuego/003/carta-06.png"
+				];
+
+				function RandomFunction(MaxValue, MinValue) {
+						return Math.round(Math.random() * (MaxValue - MinValue) + MinValue);
+					}
+					
+				function ShuffleImages() {
+					var ImgAll = $(Source).children();
+					var ImgThis = $(Source + " div:first-child");
+					var ImgArr = new Array();
+
+					for (var i = 0; i < ImgAll.length; i++) {
+						ImgArr[i] = $("#" + ImgThis.attr("id") + " img").attr("src");
+						ImgThis = ImgThis.next();
+					}
+					
+						ImgThis = $(Source + " div:first-child");
+					
+					for (var z = 0; z < ImgAll.length; z++) {
+					var RandomNumber = RandomFunction(0, ImgArr.length - 1);
+
+						$("#" + ImgThis.attr("id") + " img").attr("src", ImgArr[RandomNumber]);
+						ImgArr.splice(RandomNumber, 1);
+						ImgThis = ImgThis.next();
+					}
+				}
+
+				function ResetGame() {
+					ShuffleImages();
+					$(Source + " div img").hide();
+					$(Source + " div").css("visibility", "visible");
+					Counter = 0;
+					$("#success").remove();
+					$("#counter").html("" + Counter);
+					BoxOpened = "";
+					ImgOpened = "";
+					ImgFound = 0;
+					return false;
+				}
+
+				function OpenCard() {
+					var id = $(this).attr("id");
+
+					if ($("#" + id + " img").is(":hidden")) {
+						$(Source + " div").unbind("click", OpenCard);
+					
+						$("#" + id + " img").slideDown("fast");
+
+						if (ImgOpened == "") {
+							BoxOpened = id;
+							ImgOpened = $("#" + id + " img").attr("src");
+							setTimeout(function() {
+								$(Source + " div").bind("click", OpenCard)
+							}, 300);
+						} else {
+							CurrentOpened = $("#" + id + " img").attr("src");
+							if (ImgOpened != CurrentOpened) {
+								setTimeout(function(){
+									$("#" + id + " img").slideUp("fast");
+									$("#" + BoxOpened + " img").slideUp("fast");
+									BoxOpened = "";
+									ImgOpened = "";
+								}, 400);
+							} else {
+								$("#" + id + " img").parent().css("visibility", "hidden");
+								$("#" + BoxOpened + " img").parent().css("visibility", "hidden");
+								ImgFound++;
+								BoxOpened = "";
+								ImgOpened = "";
+							}
+							setTimeout(function() {
+								$(Source + " div").bind("click", OpenCard)
+							}, 400);
+						}
+						Counter++;
+						$("#counter").html("" + Counter);
+
+						if (ImgFound == ImgSource.length) {
+							location.href = "index.php?p=cocinar&r=2&h=ffa62ed6b346a531ee4dfb738cefe38f";
+						}
+					}
+				}
+
+				$(function() {
+
+				for (var y = 1; y < 3 ; y++) {
+					$.each(ImgSource, function(i, val) {
+						$(Source).append("<div id=card" + y + i + "><img src=" + val + " />");
+					});
+				}
+					$(Source + " div").click(OpenCard);
+					ShuffleImages();
+				});
+			</script>
+		<div class="banner4"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- VendeCookies 728 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2196296813774114"
+     data-ad-slot="3240316387"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div><a href="index.php?p=captcha&re=2"><div style="margin-top:15px;" class="boton-naranja recurs-2">¡Me rindo! No consigo pasarme esta prueba.</div></a>
