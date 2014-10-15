@@ -150,7 +150,7 @@ function tricky_cook($user,$pass){
 		// Activar Happy hour
 		$happyHour = false;
 		if(preg_match('/<div class="happyhour"><img src="\/imatges\/disseny\/happyhour\/hh-([0-9]+)/msi',$data['pageContent'],$m)){
-			echo date('H:i:s - ')."\033[0;32mHappy Hour!!\033[0m";
+			echo "\033[0;32mHappy Hour!!\033[0m - ";
 			$happyHour = $m[1];
 		}
 
@@ -354,7 +354,7 @@ function tricky_game001($data){
 			copy('game1.jpg','resources/game1/error/'.time().'.jpg');
 			exit;
 		}else{
-			echo 'Cambiar imagen de juego 1',PHP_EOL;
+			// echo 'Cambiar imagen de juego 1',PHP_EOL;
 			copy('game1.jpg','resources/game1/error/'.$image.'.jpg');
 		}
 	}
@@ -613,7 +613,7 @@ function tricky_game008($data){
 			exit;
 		}
 		else{
-			echo 'Cambiar imagen de juego 8',PHP_EOL;
+			// echo 'Cambiar imagen de juego 8',PHP_EOL;
 			copy('game8.jpg','resources/game8/error/'.$image.'.jpg');
 		}
 	}
