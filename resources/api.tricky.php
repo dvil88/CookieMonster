@@ -235,7 +235,6 @@ function tricky_cook($user,$pass){
 
 		// Abrir regalos
 		// tricky_openGifts();
-
 	}while(true);
 }
 
@@ -728,7 +727,8 @@ function tricky_game010($data){
 		'00096'=>'2',
 		'00097'=>'5',
 		'00098'=>'1',
-		'00098'=>'7',
+		'00099'=>'7',
+		'00100'=>'4',
 	);
 
 	file_put_contents('game10.jpg',$d['pageContent']);
@@ -749,6 +749,7 @@ function tricky_game010($data){
 	if($diffs[$image] > 0){
 		if($diffs[$image] > 50){
 			//print_r($diffs);
+			echo "\033[0;31mError en juego 10\033[0m",PHP_EOL;
 			copy('crop10.jpg','resources/game10/error/'.time().'.jpg');
 			return false;
 			//exit;
@@ -756,7 +757,7 @@ function tricky_game010($data){
 			echo 'Cambiar imagen de juego 10'.PHP_EOL;
 			// echo 'Puntuación: '.$diffs[$image].PHP_EOL;
 			// echo 'Imagen: '.$image.PHP_EOL;
-			copy('game10.jpg','resources/game10/error/'.$image.'.jpg');
+			copy('crop10.jpg','resources/game10/error/'.$image.'.jpg');
 			// file_put_contents('resources/game10/error/'.$image.'.html',$data['pageContent']);
 		}
 	}
