@@ -70,6 +70,17 @@ function tricky_openGifts(){
 	$url ='http://www.vendecookies.com/index.php?p=regalos';
 	$data = html_petition($url,$data);
 
+	$resources = array(
+		'1'=>'cookies',
+		'2'=>'chocolate',
+		'3'=>'mantequilla',
+		'4'=>'azucar',
+		'5'=>'harina',
+		'6'=>'huevos',
+		'7'=>'coins',
+		'8'=>'estrellas',
+	);
+
 	// Control de errores de pageContent
 	if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
@@ -84,10 +95,13 @@ function tricky_openGifts(){
 		// Control de errores de pageContent
 		if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
-		// file_put_contents('resources/log/gifts.html',$data['pageContent']);
+		if(preg_match('/<div id="confirmacion[^<]+<img src=\'\/imatges\/disseny\/75x75\/([0-9]+)[^<]+<p[^>]+>([^<]+)/msi',$data['pageContent'],$m)){
+			echo date('H:i:s - ')."\033[1;34m".$m[2].' '.$resources[$m[1]]."\033[0m".PHP_EOL;
+		}
+		// file_put_contents('resources/log/gifts-'.time().'.html',$data['pageContent']);
 	}
 
-	echo date('H:i:s - ').count($m[1]).' regalos abiertos',PHP_EOL;
+	// echo date('H:i:s - ').count($m[1]).' regalos abiertos',PHP_EOL;
 }
 
 function tricky_cook($user,$pass){
@@ -136,7 +150,7 @@ function tricky_cook($user,$pass){
 		// Activar Happy hour
 		$happyHour = false;
 		if(preg_match('/<div class="happyhour"><img src="\/imatges\/disseny\/happyhour\/hh-([0-9]+)/msi',$data['pageContent'],$m)){
-			echo date('H:i:s - ')."\033[0;34mHappy Hour!!\033[0m";
+			echo date('H:i:s - ')."\033[0;32mHappy Hour!!\033[0m";
 			$happyHour = $m[1];
 		}
 
@@ -740,14 +754,9 @@ function tricky_game010($data){
 			echo "\033[0;31mError en juego 10\033[0m",PHP_EOL;
 			copy('crop10.jpg','resources/game10/error/'.time().'.jpg');
 			return false;
-			//exit;
 		}
-		echo 'Cambiar imagen de juego 10. '.$image.PHP_EOL;
-		// echo 'Puntuación: '.$diffs[$image].PHP_EOL;
-		// echo 'Imagen: '.$image.PHP_EOL;
+		// echo 'Cambiar imagen de juego 10:  '.$image.PHP_EOL;
 		copy('crop10.jpg','resources/game10/'.$image.'.jpg');
-		// file_put_contents('resources/game10/error/'.$image.'.html',$data['pageContent']);
-		
 	}
 
 	if(preg_match('/<div class="opcio opcio-'.$singles[$image].'" onclick=\'location.href = "([^"]+)/msi',$data['pageContent'],$win)){
@@ -856,14 +865,9 @@ function tricky_game011($data){
 			echo "\033[0;31mError en juego 11\033[0m",PHP_EOL;
 			copy('game11.jpg','resources/game11/error/'.time().'.jpg');
 			return false;
-			//exit;
 		}
-		echo 'Cambiar imagen de juego 11. '.$image.PHP_EOL;
-		// echo 'Puntuación: '.$diffs[$image].PHP_EOL;
-		// echo 'Imagen: '.$image.PHP_EOL;
-		copy('game11.jpg','resources/game11/'.$image.'.jpg');
-		// file_put_contents('resources/game11/error/'.$image.'.html',$data['pageContent']);
-		
+		// echo 'Cambiar imagen de juego 11: '.$image.PHP_EOL;
+		copy('game11.jpg','resources/game11/'.$image.'.jpg');		
 	}
 
 	if(preg_match('/bascula-'.$weights[$image].'" onclick=\'location.href = "([^\"]+)/msi',$data['pageContent'],$win)){
