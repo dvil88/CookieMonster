@@ -354,7 +354,7 @@ function tricky_game001($data){
 			copy('game1.jpg','resources/game1/error/'.time().'.jpg');
 			exit;
 		}else{
-			// echo 'Cambiar imagen de juego 1',PHP_EOL;
+			echo 'Cambiar imagen de juego 1',PHP_EOL;
 			copy('game1.jpg','resources/game1/error/'.$image.'.jpg');
 		}
 	}
@@ -613,7 +613,7 @@ function tricky_game008($data){
 			exit;
 		}
 		else{
-			// echo 'Cambiar imagen de juego 8',PHP_EOL;
+			echo 'Cambiar imagen de juego 8',PHP_EOL;
 			copy('game8.jpg','resources/game8/error/'.$image.'.jpg');
 		}
 	}
@@ -750,12 +750,14 @@ function tricky_game010($data){
 
 	if($diffs[$image] > 0){
 		if($diffs[$image] > 100){
-			//print_r($diffs);
+			$diffs = array_slice($diffs,0,10);
+			print_r($diffs);
+
 			echo "\033[0;31mError en juego 10\033[0m",PHP_EOL;
 			copy('crop10.jpg','resources/game10/error/'.time().'.jpg');
 			return false;
 		}
-		// echo 'Cambiar imagen de juego 10:  '.$image.PHP_EOL;
+		echo 'Cambiar imagen de juego 10:  '.$image.PHP_EOL;
 		copy('crop10.jpg','resources/game10/'.$image.'.jpg');
 	}
 
@@ -866,7 +868,7 @@ function tricky_game011($data){
 			copy('game11.jpg','resources/game11/error/'.time().'.jpg');
 			return false;
 		}
-		// echo 'Cambiar imagen de juego 11: '.$image.PHP_EOL;
+		echo 'Cambiar imagen de juego 11: '.$image.PHP_EOL;
 		copy('game11.jpg','resources/game11/'.$image.'.jpg');		
 	}
 
