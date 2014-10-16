@@ -523,6 +523,10 @@ function tricky_game007($data){
 	sleep(rand(15,25));
 
 	preg_match('/desabilitarTeclado=true;\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);
+
+	// Fallo en un 10% de las veces
+	if(rand(0,100)%10 == 0){preg_match('/else{\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);echo 'Provocamos error en el ahorcado'.PHP_EOL;}
+
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 	$url = 'http://www.vendecookies.com/'.$win[1];
 	$data = html_petition($url,$data);
