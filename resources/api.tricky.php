@@ -256,7 +256,6 @@ function tricky_cook($user,$pass){
 	}while(true);
 }
 
-
 function tricky_showUsage(){
 	echo
 	"Usage:\tphp ",$_SERVER['argv'][0],' -[CS] username',PHP_EOL,
@@ -303,7 +302,7 @@ function tricky_game001($data){
 		'0022'=>array(1=>3,2=>4,3=>1,4=>2),
 		'0023'=>array(1=>3,2=>4,3=>1,4=>2),
 		'0024'=>array(1=>3,2=>4,3=>1,4=>2),
-		'0025'=>array(1=>4,2=>1,3=>2,4=>3),
+		'0025'=>array(1=>4,2=>1,3=>3,4=>2),
 		'0026'=>array(1=>3,2=>2,3=>4,4=>1),
 		'0027'=>array(1=>4,2=>2,3=>1,4=>3),
 		'0028'=>array(1=>2,2=>4,3=>3,4=>1),
@@ -890,46 +889,7 @@ function tricky_game011($data){
 		exit;
 	}
 }
-/*
-function tricky_game011_old($data){
-	$d['cookieFile']['file'] = $GLOBALS['config']['cookie'];
-	$url = 'http://www.vendecookies.com/imatgeminijoc.php';
-	$d = html_petition($url,$d);
 
-	// Control de errores de pageContent
-	if(!isset($d['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
-
-	file_put_contents('resources/game11/game11.jpg',$d['pageContent']);
-
-	shell_exec('convert resources/game11/game11.jpg -crop 267x164+58+105 resources/game11/game11_1.jpg 2>&1');
-	shell_exec('convert resources/game11/game11.jpg -crop 267x164+374+105 resources/game11/game11_2.jpg 2>&1');
-
-	$im1 = trim(shell_exec('compare -metric AE -fuzz 5% resources/game11/tablero.jpg resources/game11/game11_1.jpg /dev/null 2>&1'));
-	$im2 = trim(shell_exec('compare -metric AE -fuzz 5% resources/game11/tablero.jpg resources/game11/game11_2.jpg /dev/null 2>&1'));
-
-
-	$time = time();
-	copy('resources/game11/game11.jpg','resources/game11/processed/'.$time.'.jpg');
-	unlink('resources/game11/game11.jpg');
-	unlink('resources/game11/game11_1.jpg');
-	unlink('resources/game11/game11_2.jpg');
-
-	$weight = 1;if($im2 > $im1){$weight = 2;}
-	if(preg_match('/bascula-'.$weight.'" onclick=\'location.href = "([^\"]+)/msi',$data['pageContent'],$win)){
-		// Tiempo de resolución del juego
-		sleep(rand(3,8));
-
-		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
-		$url = 'http://www.vendecookies.com/'.$win[1];
-		$data = html_petition($url,$data);
-
-		return $data;
-	}else{
-		echo 'Error pesando galletas'.PHP_EOL;
-		exit;
-	}
-}
-*/
 /* Cocinar galletas */
 function tricky_cookie($data){
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
@@ -985,13 +945,6 @@ function tricky_cookie($data){
 	// Tiempo de reproducción de video
 	sleep(rand(47,60));
 	echo date('H:i:s - ').'Cookies: ';
-	/*
-	echo 'Cocinando...',PHP_EOL;
-	for($i=1;$i<47;$i++){
-		showStatus($i,46,130);
-		sleep(1);
-	}
-	*/
 
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 	$url = 'http://www.vendecookies.com/'.$win[1];
@@ -1011,7 +964,6 @@ function tricky_cookie($data){
 		exit;
 	}
 	$GLOBALS['totalCookies'] += $prize[1];
-	// echo date('H:i:s - '),'Cookies: ',$prize[1],' | Total: ',$GLOBALS['totalCookies'],PHP_EOL;
 	echo $prize[1],' | Total: ',$GLOBALS['totalCookies'],PHP_EOL;
 }
 
