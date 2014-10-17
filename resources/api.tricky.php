@@ -14,7 +14,7 @@ function tricky_login($user,$pass){
 	$data = html_petition($url,$data);
 
 	// Control de errores de pageContent
-	if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 	if(preg_match('/id="confirmacion[^<]+<p>([^<]+)/msi',$data['pageContent'],$m)){
 		return array('errorCode'=>1,'errorDescription'=>$m[1]);
@@ -37,7 +37,7 @@ function tricky_register($user,$pass,$email,$referer){
 	$data = html_petition($url,$data);
 
 	// Control de errores de pageContent
-	if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 	if(preg_match('/id="confirmacion[^<]+<p>([^<]+)/msi',$data['pageContent'],$m)){
 		return array('errorCode'=>1,'errorDescription'=>$m[1]);
@@ -51,7 +51,7 @@ function tricky_getStats(){
 	$data = html_petition($url,$data);
 
 	// Control de errores de pageContent
-	if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 	if(!preg_match_all('/class="ingredient.*?icon-([^\.]+)[^<]+<div class="text">[<strong>]*([^<]+)/msi',$data['pageContent'],$ing)){
 		echo 'ERROR! Stats not found',PHP_EOL;
@@ -82,7 +82,7 @@ function tricky_openGifts(){
 	);
 
 	// Control de errores de pageContent
-	if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 	preg_match_all('/<a href="(index.php\?p=regalos&idr=[0-9]+)">/msi',$data['pageContent'],$m);
 
@@ -93,7 +93,7 @@ function tricky_openGifts(){
 		$data = html_petition($url,$data);
 
 		// Control de errores de pageContent
-		if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+		if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 		if(preg_match('/<div id="confirmacion[^<]+<img src=\'\/imatges\/disseny\/75x75\/([0-9]+)[^<]+<p[^>]+>([^<]+)/msi',$data['pageContent'],$m)){
 			echo date('H:i:s - ')."\033[1;34m".$m[2].' '.$resources[$m[1]]."\033[0m".PHP_EOL;
@@ -145,7 +145,7 @@ function tricky_cook($user,$pass){
 		$data = html_petition($url,$data);
 
 		// Control de errores de pageContent
-		if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+		if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 		// Activar Happy hour
 		$happyHour = false;
@@ -172,7 +172,7 @@ function tricky_cook($user,$pass){
 				$data = html_petition($url,$data);
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 				if(preg_match('/<div id="confirmacion/msi',$data['pageContent']) && $happyHour === false){
 					sleep(2);
@@ -187,7 +187,7 @@ function tricky_cook($user,$pass){
 				$data = html_petition($url,$data);
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 				if(!preg_match('/solicitar recurs-([0-9]+)/msi',$data['pageContent'],$res)){
 					// No podemos solicitar recursos
@@ -203,7 +203,7 @@ function tricky_cook($user,$pass){
 				$game = $data = html_petition($url,$data);
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+				if(!isset($game['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 				if(preg_match('/minijuego minijuego-([0-9]+)/msi',$data['pageContent'],$game)){
 					// Es un minijuego, lo lanzamos
@@ -229,7 +229,7 @@ function tricky_cook($user,$pass){
 				}
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 				if(preg_match('/<div class="recurs">Has conseguido ([^<]+)/msi',$data['pageContent'],$prize)){
 					echo $prize[1],PHP_EOL;
@@ -353,7 +353,7 @@ function tricky_game001($data){
 			copy('game1.jpg','resources/game1/error/'.time().'.jpg');
 			exit;
 		}else{
-			echo 'Cambiar imagen de juego 1',PHP_EOL;
+			// echo 'Cambiar imagen de juego 1',PHP_EOL;
 			copy('game1.jpg','resources/game1/error/'.$image.'.jpg');
 		}
 	}
@@ -616,7 +616,7 @@ function tricky_game008($data){
 			exit;
 		}
 		else{
-			echo 'Cambiar imagen de juego 8',PHP_EOL;
+			// echo 'Cambiar imagen de juego 8',PHP_EOL;
 			copy('game8.jpg','resources/game8/error/'.$image.'.jpg');
 		}
 	}
@@ -904,7 +904,7 @@ function tricky_cookie($data){
 	$data = html_petition($url,$data);
 
 	// Control de errores de pageContent
-	if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 	// Ponemos un delay de 3 segundos antes de lanzar el crono
 	sleep(3);
@@ -951,7 +951,7 @@ function tricky_cookie($data){
 	$data = html_petition($url,$data);
 
 	// Control de errores de pageContent
-	if(!isset($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
+	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;exit;}
 
 	if(preg_match('/imatges\/disseny\/ko-[0-9]+\.png/msi',$data['pageContent'])){
 		echo 'Error cocinando',PHP_EOL;
