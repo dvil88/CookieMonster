@@ -172,7 +172,7 @@ function tricky_cook($user,$pass){
 				$data = html_petition($url,$data);
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
+				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;continue 2;}
 
 				if(preg_match('/<div id="confirmacion/msi',$data['pageContent']) && $happyHour === false){
 					sleep(2);
@@ -187,20 +187,20 @@ function tricky_cook($user,$pass){
 				$data = html_petition($url,$data);
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
+				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;continue 2;}
 
 				if(!preg_match('/solicitar recurs-([0-9]+)/msi',$data['pageContent'],$res)){
 					// No podemos solicitar recursos
 					file_put_contents('resources/log/solicitarRecursos-'.time().'.html',$data['pageContent']);
-					continue;
+					continue 2;
 				}
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
+				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;continue;}
 
 				if(preg_match('/minijuego minijuego-([0-9]+)/msi',$data['pageContent'],$game)){
 					// Es un minijuego, lo lanzamos
-					if(!function_exists('tricky_game'.$game[1])){echo 'No existe el juego',PHP_EOL;file_put_contents('resources/log/gameNotFound-'.time().'.html',$data['pageContent']);return false;}
+					if(!function_exists('tricky_game'.$game[1])){echo 'No existe el juego',PHP_EOL;file_put_contents('resources/log/gameNotFound-'.time().'.html',$data['pageContent']);exit;}
 					$data = call_user_func('tricky_game'.$game[1],$data);
 					echo date('H:i:s - ').'Juego '.$game[1].': ';
 				
@@ -213,16 +213,16 @@ function tricky_cook($user,$pass){
 				}else{
 					echo date('H:i:s - ').'Juego no reconocido, volvemos a la cocina',PHP_EOL;
 					file_put_contents('resources/log/gameUnknown-'.time().'.html',$data['pageContent']);
-					continue;
+					continue 2;
 				}
 
 				if($data === false){
 					// No es seguro seguir, volvemos a la cocina
-					continue;
+					continue 2;
 				}
 
 				// Control de errores de pageContent
-				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
+				if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;continue 2;}
 
 				if(preg_match('/<div class="recurs">Has conseguido ([^<]+)/msi',$data['pageContent'],$prize)){
 					echo $prize[1],PHP_EOL;
