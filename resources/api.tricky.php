@@ -87,7 +87,7 @@ function tricky_openGifts(){
 	preg_match_all('/<a href="(index.php\?p=regalos&idr=[0-9]+)">/msi',$data['pageContent'],$m);
 
 	foreach($m[1] as $g){
-		sleep(2);
+		sleep(rand(1,2));
 		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 		$url = 'http://www.vendecookies.com/'.$g;
 		$data = html_petition($url,$data);
@@ -140,12 +140,13 @@ function tricky_cook($user,$pass){
 		sleep(1);
 
 		// Entramos en la cocina
-		$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
+		$d = array();
+		$d['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 		$url = 'http://www.vendecookies.com/index.php?p=cocinar';
-		$data = html_petition($url,$data);
+		$data = html_petition($url,$d);
 
 		// Control de errores de pageContent
-		if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
+		if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;sleep(3);file_put_contents('resources/log/errorPage-'.__LINE__.'-'.time().'.txt',print_r($data,true));exit;continue;}
 
 		// Activar Happy hour
 		$happyHour = false;
@@ -887,8 +888,8 @@ function tricky_cookie($data){
 	// Control de errores de pageContent
 	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
 
-	// Ponemos un delay de 3 segundos antes de lanzar el crono
-	sleep(3);
+	// Ponemos un delay de 2 segundos antes de lanzar el crono
+	sleep(2);
 
 	// Activar crono
 	if(!preg_match('/cronocookies\(([0-9]+),([0-9]+),([0-9]+)\);/msi',$data['pageContent'],$crono)){echo date('H:i:s - ').'Error al iniciar crono: '.__LINE__.PHP_EOL;file_put_contents('resources/log/crono-'.time().'.html',$data['pageContent']);return false;}
