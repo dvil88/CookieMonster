@@ -134,7 +134,7 @@ function tricky_cook($user,$pass){
 	$stats = tricky_getStats();
 	if(!$stats){return;}
 
-
+	$canCook = false;
 	do{
 		// Esperamos 1 segundo antes de ir a cocinar
 		sleep(1);
@@ -160,7 +160,7 @@ function tricky_cook($user,$pass){
 
 
 		// Buscamos los ingredientes que nos faltan para hacer galletas
-		if(preg_match_all('/class="ingredient[^"]+falta" id="ing-([0-9]+)/msi',$data['pageContent'],$m) || $happyHour !== false){
+		if(preg_match_all('/class="ingredient[^"]+'.($canCook != -1 ? 'falta' : '').'" id="ing-([0-9]+)/msi',$data['pageContent'],$m) || $happyHour !== false){
 			// Faltan ingredientes para cocinar galletas
 
 			// Si hay happy hour de un ingrediente lo único que hacemos es obtener ese ingrediente
@@ -241,7 +241,8 @@ function tricky_cook($user,$pass){
 		}
 
 		// A cocinar galletas
-		tricky_cookie($data);
+		$canCook = true;
+		$canCook = tricky_cookie($data);
 
 		// Abrir regalos
 		// tricky_openGifts();
@@ -888,11 +889,17 @@ function tricky_cookie($data){
 	// Control de errores de pageContent
 	if(!isset($data['pageContent']) || empty($data['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
 
+	// Comprobamos si ha dado error de que no hay suficientes recursos
+	if(preg_match('/imatges\/disseny\/ko-00\.png/msi',$data['pageContent'])){
+		echo 'No tenemos suficientes recursos para cocinar.'.PHP_EOL;
+		return -1;
+	}
+
 	// Ponemos un delay de 2 segundos antes de lanzar el crono
 	sleep(2);
 
 	// Activar crono
-	if(!preg_match('/cronocookies\(([0-9]+),([0-9]+),([0-9]+)\);/msi',$data['pageContent'],$crono)){echo date('H:i:s - ').'Error al iniciar crono: '.__LINE__.PHP_EOL;file_put_contents('resources/log/crono-'.time().'.html',$data['pageContent']);return false;}
+	if(!preg_match('/cronocookies\(([0-9]+),([0-9]+),([0-9]+)\);/msi',$data['pageContent'],$crono)){echo date('H:i:s - ').'Error al iniciar crono: '.__LINE__.PHP_EOL;file_put_contents('resources/log/crono-'.time().'.html',$data['pageContent']);exit;}
 	$d['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 	$d['post'] = array('i'=>$crono[2],'p'=>$crono[3]);
 	$url = 'http://www.vendecookies.com/ws/CreateCookies.php';
