@@ -277,7 +277,7 @@ function solveCaptcha(){
 
 	$result ='';for($i=1;$i<=6;$i++){
 		shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+'.$coords[$i]['x'].'+'.$coords[$i]['y'].' /tmp/letter'.$i.'.jpg 2>&1');
-		$result .= trim(shell_exec('gocr -p ./resources/captchas/ -m 258 -a 83 /tmp/letter'.$i.'.jpg'));
+		$result .= trim(shell_exec('gocr -p ./resources/captchas/old_database/ -m 258 -a 83 /tmp/letter'.$i.'.jpg'));
 	}
 	$res = preg_replace('/[^a-z0-9]+/i','',$result);
 		
@@ -344,17 +344,17 @@ function solveCaptcha2($imagePath = ''){
 		}
 	}
 
-	imagepng($imageclean,'/tmp/captcha.png');
+	imagepng($imageclean,'/tmp/captcha_p.png');
 	imagedestroy($imageclean);
 
-	$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/captcha.png 2>&1'));
+	$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/captcha_p.png 2>&1'));
 	if(preg_match('/ERROR pnm.c L[0-9]*: unexpected EOF/',$result)){
 		echo 'CAPTCHA_ERROR';exit;
 	}
 	$result = preg_replace('/[^a-z0-9]+/i','',$result);	
 	if(strlen($result) < 6){
-		echo date('H:i:s - ').'Captcha no resuelto',PHP_EOL;
-		rename('/tmp/captcha.png','resources/captchas/error/'.$result.'.png');
+		copy('/tmp/captcha.jpg','resources/captchas/error/'.$result.'.jpg');
+		copy('/tmp/captcha_p.png','resources/captchas/error/'.$result.'_p.png');
 		return false;
 	}
 
