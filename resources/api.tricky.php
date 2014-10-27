@@ -243,6 +243,7 @@ function tricky_cook($user,$pass){
 		// A cocinar galletas
 		$canCook = true;
 		$canCook = tricky_cookie($data);
+		// $canCook = -1;
 	}while(true);
 }
 
@@ -265,29 +266,99 @@ function tricky_showUsage(){
 }
 
 function solveCaptcha(){
-	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+27+14 /tmp/letter1.jpg 2>&1');
-	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+36+14 /tmp/letter2.jpg 2>&1');
-	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+45+14 /tmp/letter3.jpg 2>&1');
-	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+54+14 /tmp/letter4.jpg 2>&1');
-	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+63+14 /tmp/letter5.jpg 2>&1');
-	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+72+14 /tmp/letter6.jpg 2>&1');
+	$coords = array(
+		1=>array('x'=>'27','y'=>'14'),
+		2=>array('x'=>'36','y'=>'14'),
+		3=>array('x'=>'45','y'=>'14'),
+		4=>array('x'=>'54','y'=>'14'),
+		5=>array('x'=>'63','y'=>'14'),
+		6=>array('x'=>'72','y'=>'14'),
+	);
 
-	$result ='';for($i=1;$i<=6;$i++){$result .= trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/letter'.$i.'.jpg'));}
+	$result ='';for($i=1;$i<=6;$i++){
+		shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+'.$coords[$i]['x'].'+'.$coords[$i]['y'].' /tmp/letter'.$i.'.jpg 2>&1');
+		$result .= trim(shell_exec('gocr -p ./resources/captchas/ -m 258 -a 83 /tmp/letter'.$i.'.jpg'));
+	}
 	$res = preg_replace('/[^a-z0-9]+/i','',$result);
 		
 	if(strlen($res) != 6){
 		$time = time();
-		copy('/tmp/captcha.jpg','resources/captchas/error/'.$res.'.jpg');
-		copy('/tmp/letter1.jpg','resources/captchas/error/letters/'.$time.'_1.jpg');
-		copy('/tmp/letter2.jpg','resources/captchas/error/letters/'.$time.'_2.jpg');
-		copy('/tmp/letter3.jpg','resources/captchas/error/letters/'.$time.'_3.jpg');
-		copy('/tmp/letter4.jpg','resources/captchas/error/letters/'.$time.'_4.jpg');
-		copy('/tmp/letter5.jpg','resources/captchas/error/letters/'.$time.'_5.jpg');
-		copy('/tmp/letter6.jpg','resources/captchas/error/letters/'.$time.'_6.jpg');
+		copy('/tmp/captcha.jpg','resources/captchas/error/'.$time.'.jpg');
+
 		return false;
 	}
 
 	return $res;
+}
+
+function solveCaptcha2($imagePath = ''){
+	$pixel_getColor = function($im,$x,$y){
+		$rgb = imagecolorat($im,$x,$y);
+		$r = ($rgb >> 16) & 0xFF;
+		$g = ($rgb >> 8) & 0xFF;
+		$b = $rgb & 0xFF;
+		return array('r'=>$r,'g'=>$g,'b'=>$b);
+	};
+	$pixel_isBlank = function($c,$perc = 100){
+		$limit = 255*($perc/100);
+		if($c['r'] < $limit || $c['g'] < $limit || $c['b'] < $limit){return false;}
+		return true;
+	};
+
+	$im = imagecreatefromjpeg($imagePath);
+	imagefilter($im,IMG_FILTER_NEGATE);
+	imagefilter($im,IMG_FILTER_GRAYSCALE);
+	imagefilter($im,IMG_FILTER_BRIGHTNESS,6);
+	imagefilter($im,IMG_FILTER_CONTRAST,-30);
+
+	$w = imagesx($im);
+	$h = imagesy($im);
+
+	$cuts = array(
+		array(28,14),
+		array(36,14),
+		array(45,14),
+		array(54,14),
+		array(63,14),
+		array(72,14)
+	);
+
+	$left = 2;
+	$pad = 0;
+	$imageclean = imagecreatetruecolor($w,$h);
+	$white = imagecolorallocate($imageclean,255,255,255);
+	$black = imagecolorallocate($imageclean,0,0,0);
+	imagefill($imageclean,0,0,$white);
+	foreach($cuts as $cut){
+		imagecopy($imageclean,$im,$left,14,$cut[0]+$pad,$cut[1]+$pad,9,16);
+		$left += 14;
+	}
+
+	/* Cleanup */
+	$perc = 60;
+	for($y=0;$y<$h;$y++){
+		for($x=0;$x<$w;$x++){
+			$c = $pixel_getColor($imageclean,$x,$y);
+			if($pixel_isBlank($c,$perc)){imagesetpixel($imageclean,$x,$y,$white);continue;}
+			imagesetpixel($imageclean,$x,$y,$black);
+		}
+	}
+
+	imagepng($imageclean,'/tmp/captcha.png');
+	imagedestroy($imageclean);
+
+	$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/captcha.png 2>&1'));
+	if(preg_match('/ERROR pnm.c L[0-9]*: unexpected EOF/',$result)){
+		echo 'CAPTCHA_ERROR';exit;
+	}
+	$result = preg_replace('/[^a-z0-9]+/i','',$result);	
+	if(strlen($result) < 6){
+		echo date('H:i:s - ').'Captcha no resuelto',PHP_EOL;
+		rename('/tmp/captcha.png','resources/captchas/error/'.$result.'.png');
+		return false;
+	}
+
+	return $result;
 }
 
 /* Games */
@@ -941,7 +1012,8 @@ function tricky_cookie($data){
 
 		$captcha = file_put_contents('/tmp/captcha.jpg',$im['pageContent']);
 		
-		$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/captcha.jpg'));
+		/*
+		$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 -a 83 /tmp/captcha.jpg'));
 		$res = preg_replace('/[^a-z0-9]+/i','',$result);
 		
 		if(strlen($res) != 6){
@@ -954,6 +1026,14 @@ function tricky_cookie($data){
 				echo date('H:i:s - ')."\033[0;31mCaptcha no resuelto\033[0m".PHP_EOL;
 				return;
 			}
+		}
+		*/
+	
+		// $res = solveCaptcha();
+		$res = solveCaptcha2('/tmp/captcha.jpg');
+		if($res === false){
+			echo date('H:i:s - ')."\033[0;31mCaptcha no resuelto\033[0m".PHP_EOL;
+			return;
 		}
 
 		echo date('H:i:s - ').'Captcha: '.$res,PHP_EOL;
