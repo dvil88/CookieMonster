@@ -243,9 +243,6 @@ function tricky_cook($user,$pass){
 		// A cocinar galletas
 		$canCook = true;
 		$canCook = tricky_cookie($data);
-
-		// Abrir regalos
-		// tricky_openGifts();
 	}while(true);
 }
 
@@ -265,6 +262,32 @@ function tricky_showUsage(){
 	" -p, --proxy host:port\t\tUse proxy",PHP_EOL,
 	"     --socks5\t\t\tUse SOCK5 proxy, tor network",PHP_EOL
 	;
+}
+
+function solveCaptcha(){
+	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+27+14 /tmp/letter1.jpg 2>&1');
+	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+36+14 /tmp/letter2.jpg 2>&1');
+	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+45+14 /tmp/letter3.jpg 2>&1');
+	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+54+14 /tmp/letter4.jpg 2>&1');
+	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+63+14 /tmp/letter5.jpg 2>&1');
+	shell_exec('convert /tmp/captcha.jpg -negate -type Grayscale -crop 10x14+72+14 /tmp/letter6.jpg 2>&1');
+
+	$result ='';for($i=1;$i<=6;$i++){$result .= trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/letter'.$i.'.jpg'));}
+	$res = preg_replace('/[^a-z0-9]+/i','',$result);
+		
+	if(strlen($res) != 6){
+		$time = time();
+		copy('/tmp/captcha.jpg','resources/captchas/error/'.$res.'.jpg');
+		copy('/tmp/letter1.jpg','resources/captchas/error/letters/'.$time.'_1.jpg');
+		copy('/tmp/letter2.jpg','resources/captchas/error/letters/'.$time.'_2.jpg');
+		copy('/tmp/letter3.jpg','resources/captchas/error/letters/'.$time.'_3.jpg');
+		copy('/tmp/letter4.jpg','resources/captchas/error/letters/'.$time.'_4.jpg');
+		copy('/tmp/letter5.jpg','resources/captchas/error/letters/'.$time.'_5.jpg');
+		copy('/tmp/letter6.jpg','resources/captchas/error/letters/'.$time.'_6.jpg');
+		return false;
+	}
+
+	return $res;
 }
 
 /* Games */
@@ -917,13 +940,20 @@ function tricky_cookie($data){
 		if(!isset($im['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
 
 		$captcha = file_put_contents('/tmp/captcha.jpg',$im['pageContent']);
+		
 		$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/captcha.jpg'));
 		$res = preg_replace('/[^a-z0-9]+/i','',$result);
 		
 		if(strlen($res) != 6){
-			echo date('H:i:s - ').'Captcha no resuelto',PHP_EOL;
-			file_put_contents('resources/captchas/error/'.$res.'.jpg',$im['pageContent']);
-			return;
+			// echo date('H:i:s - ').'Captcha no resuelto',PHP_EOL;
+			// file_put_contents('resources/captchas/error/'.$res.'.jpg',$im['pageContent']);
+			// return;
+
+			$res = solveCaptcha();
+			if($res === false){
+				echo date('H:i:s - ')."\033[0;31mCaptcha no resuelto\033[0m".PHP_EOL;
+				return;
+			}
 		}
 
 		echo date('H:i:s - ').'Captcha: '.$res,PHP_EOL;
@@ -932,7 +962,7 @@ function tricky_cookie($data){
 	}
 
 	// Tiempo de reproducción de video
-	sleep(rand(47,60));
+	sleep(rand(47,55));
 	echo date('H:i:s - ').'Cookies: ';
 
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
