@@ -347,7 +347,7 @@ function solveCaptcha2($imagePath = ''){
 	imagepng($imageclean,'/tmp/captcha_p.png');
 	imagedestroy($imageclean);
 
-	$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 /tmp/captcha_p.png 2>&1'));
+	$result = trim(shell_exec('gocr -p ./resources/captchas/ -m 258 -a 85 /tmp/captcha_p.png 2>&1'));
 	if(preg_match('/ERROR pnm.c L[0-9]*: unexpected EOF/',$result)){
 		echo 'CAPTCHA_ERROR';exit;
 	}
@@ -1033,6 +1033,7 @@ function tricky_cookie($data){
 		$res = solveCaptcha2('/tmp/captcha.jpg');
 		if($res === false){
 			echo date('H:i:s - ')."\033[0;31mCaptcha no resuelto\033[0m".PHP_EOL;
+			exit;
 			return;
 		}
 
@@ -1055,6 +1056,7 @@ function tricky_cookie($data){
 	if(preg_match('/imatges\/disseny\/ko-[0-9]+\.png/msi',$data['pageContent'])){
 		echo 'Error cocinando',PHP_EOL;
 		if(isset($captcha)){file_put_contents('resources/captchas/error/'.$res.'.jpg',$im['pageContent']);}
+		exit;
 		return false;
 	}
 
