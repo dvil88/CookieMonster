@@ -11,6 +11,7 @@ $GLOBALS['config'] = array(
 	),
 );
 $GLOBALS['totalCookies'] = 0;
+$GLOBALS['farm'] = false;
 
 if($_SERVER['argc'] == 1){tricky_showUsage();exit;}
 
@@ -92,7 +93,11 @@ foreach($argv as $k=>$c){
 				$GLOBALS['config']['proxy']['port'] = $port;
 				break;
 			case '--socks5':
-				$GLOBALS['config']['proxy']['port'] = CURLPROXY_SOCKS5;
+				$GLOBALS['config']['proxy']['type'] = CURLPROXY_SOCKS5;
+				break;
+			case '-f':
+			case '--farm':
+				$GLOBALS['farm'] = true;
 				break;
 		}
 	}

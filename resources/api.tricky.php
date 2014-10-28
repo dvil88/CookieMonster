@@ -109,7 +109,7 @@ function tricky_cook($user,$pass){
 	$endTime = strtotime('+ '.rand(40,90).' minutes');
 
 	$ip = getIP();
-	echo ' # '.PHP_EOL,' # VendeCookies 2.0'.PHP_EOL,' # Hora límite: ',date('H:i:s',$endTime).PHP_EOL,' # IP: ',$ip,($GLOBALS['config']['proxy']['active'] ? ' (TOR)' : '').PHP_EOL,' # '.PHP_EOL;
+	echo ' # '.PHP_EOL.' # VendeCookies 2.0'.PHP_EOL.' # Hora límite: ',date('H:i:s',$endTime).PHP_EOL.' # IP: ',$ip,($GLOBALS['config']['proxy']['active'] ? ' (TOR)' : '').PHP_EOL.' # '.PHP_EOL;
 
 
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
@@ -241,27 +241,30 @@ function tricky_cook($user,$pass){
 		}
 
 		// A cocinar galletas
-		$canCook = true;
-		$canCook = tricky_cookie($data);
-		// $canCook = -1;
+		$canCook = -1;
+		if($GLOBALS['farm'] === false){
+			$canCook = true;
+			$canCook = tricky_cookie($data);
+		}
 	}while(true);
 }
 
 function tricky_showUsage(){
 	echo
-	"Usage:\tphp ",$_SERVER['argv'][0],' -[CS] username'.PHP_EOL,
-		  "\tphp ",$_SERVER['argv'][0],' -R username password email [referer]'.PHP_EOL,
+	"Usage:\tphp ",$_SERVER['argv'][0],' -[CS] username'.PHP_EOL.
+		  "\tphp ",$_SERVER['argv'][0],' -R username password email [referer]'.PHP_EOL.
 
-	PHP_EOL,
-	'Commands:'.PHP_EOL,
-	'Either long or short options are allowed.'.PHP_EOL,
-	" -R, --register username password email [referer]\n\t\t\t\tRegister a new user".PHP_EOL,
-	" -C, --cook username\t\tCook ingredients and cookies".PHP_EOL,
-	" -S, --stats username\t\tGet cookie stats".PHP_EOL,
-	PHP_EOL,
-	'Options:'.PHP_EOL,
-	" -p, --proxy host:port\t\tUse proxy".PHP_EOL,
-	"     --socks5\t\t\tUse SOCK5 proxy, tor network".PHP_EOL
+	PHP_EOL.
+	'Commands:'.PHP_EOL.
+	'Either long or short options are allowed.'.PHP_EOL.
+	" -R, --register username password email [referer]\n\t\t\t\tRegister a new user".PHP_EOL.
+	" -C, --cook username\t\tCook ingredients and cookies".PHP_EOL.
+	" -S, --stats username\t\tGet cookie stats".PHP_EOL.
+	PHP_EOL.
+	'Options:'.PHP_EOL.
+	" -p, --proxy host:port\t\tUse proxy".PHP_EOL.
+	"     --socks5\t\t\tUse SOCK5 proxy, tor network".PHP_EOL.
+	" -f, --farm\t\t\tFarm ingredients only and don't cook cookies".PHP_EOL
 	;
 }
 
@@ -419,12 +422,12 @@ function tricky_game001($data){
 	$url = 'http://www.vendecookies.com/imatgeminijoc.php';
 	$d = html_petition($url,$d);
 
-	file_put_contents('game1.jpg',$d['pageContent']);
+	file_put_contents('/tmp/game1.jpg',$d['pageContent']);
 
 
 	$diffs = array();
 	foreach($paths as $k=>$v){
-		$c = trim(shell_exec('compare -metric AE -fuzz 30% game1.jpg resources/game1/'.$k.'.jpg diff.jpg 2>&1'));
+		$c = trim(shell_exec('compare -metric AE -fuzz 30% /tmp/game1.jpg resources/game1/'.$k.'.jpg /dev/null 2>&1'));
 		$diffs[$k] = $c;
 		if($c == 0){break;}
 	}
@@ -432,16 +435,16 @@ function tricky_game001($data){
 	asort($diffs);
 	$image = key($diffs);
 
-	copy('game1.jpg','resources/game1/processed/'.$image.'-'.time().'.jpg');
+	copy('/tmp/game1.jpg','resources/game1/processed/'.$image.'-'.time().'.jpg');
 
 	if($diffs[$image] > 0){
 		if($diffs[$image] > 50){
 			print_r($diffs);
-			copy('game1.jpg','resources/game1/error/'.time().'.jpg');
+			copy('/tmp/game1.jpg','resources/game1/error/'.time().'.jpg');
 			exit;
 		}else{
 			// echo 'Cambiar imagen de juego 1'.PHP_EOL;
-			copy('game1.jpg','resources/game1/error/'.$image.'.jpg');
+			copy('/tmp/game1.jpg','resources/game1/error/'.$image.'.jpg');
 		}
 	}
 
@@ -544,20 +547,20 @@ function tricky_game004($data){
 	// Control de errores de pageContent
 	if(!isset($d['pageContent']) || empty($d['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
 
-	file_put_contents('game4.png',$d['pageContent']);
+	file_put_contents('/tmp/game4.png',$d['pageContent']);
 
 	for($i=1;$i<=9;$i++){
-		$c = trim(shell_exec('compare -metric AE game4.png resources/game4/00'.$i.'.png diff.png 2>&1'));
+		$c = trim(shell_exec('compare -metric AE /tmp/game4.png resources/game4/00'.$i.'.png /dev/null 2>&1'));
 		if($c == 0){$image = '00'.$i;break;}
 	}
 
 	if($c != 0){
 		echo 'No coinciden las imágenes'.PHP_EOL;
-		copy('game4.png','resources/game4/error/'.time().'.png');
+		copy('/tmp/game4.png','resources/game4/error/'.time().'.png');
 		return false;
 	}
 
-	copy('game4.png','resources/game4/processed/'.$image.'-'.time().'.png');
+	copy('/tmp/game4.png','resources/game4/processed/'.$image.'-'.time().'.png');
 
 	preg_match('/url\("\/imatges\/minijuego\/004\/([0-9]+).*?\.minijuego-004 \.bandeja-2{background:url\("\/imatges\/minijuego\/004\/([0-9]+)/msi',$data['pageContent'],$plates);
 
@@ -679,11 +682,11 @@ function tricky_game008($data){
 	// Control de errores de pageContent
 	if(!isset($d['pageContent']) || empty($d['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
 
-	file_put_contents('game8.jpg',$d['pageContent']);
+	file_put_contents('/tmp/game8.jpg',$d['pageContent']);
 
 	$diffs = array();
 	foreach($order as $k=>$v){
-		$c = trim(shell_exec('compare -metric AE -fuzz 30% game8.jpg resources/game8/'.$k.'.jpg diff.jpg 2>&1'));
+		$c = trim(shell_exec('compare -metric AE -fuzz 30% /tmp/game8.jpg resources/game8/'.$k.'.jpg /dev/null 2>&1'));
 		$diffs[$k] = $c;
 		if($c == 0){break;}
 	}
@@ -691,17 +694,17 @@ function tricky_game008($data){
 	asort($diffs);
 	$image = key($diffs);
 
-	copy('game8.jpg','resources/game8/processed/'.$image.'-'.time().'.jpg');
+	copy('/tmp/game8.jpg','resources/game8/processed/'.$image.'-'.time().'.jpg');
 
 	if($diffs[$image] > 0){
 		if(strlen($diffs[$image]) > 2){
 			print_r($diffs);
-			copy('game8.jpg','resources/game8/error/'.time().'.jpg');
+			copy('/tmp/game8.jpg','resources/game8/error/'.time().'.jpg');
 			exit;
 		}
 		else{
 			// echo 'Cambiar imagen de juego 8'.PHP_EOL;
-			copy('game8.jpg','resources/game8/error/'.$image.'.jpg');
+			copy('/tmp/game8.jpg','resources/game8/error/'.$image.'.jpg');
 		}
 	}
 
@@ -820,12 +823,12 @@ function tricky_game010($data){
 		'0080'=>'6',
 	);
 
-	file_put_contents('game10.jpg',$d['pageContent']);
-	shell_exec('convert game10.jpg -crop 356x356+50+51 crop10.jpg');
+	file_put_contents('/tmp/game10.jpg',$d['pageContent']);
+	shell_exec('convert /tmp/game10.jpg -crop 356x356+50+51 /tmp/crop10.jpg');
 
 	$diffs = array();
 	foreach($singles as $k=>$v){
-		$c = trim(shell_exec('compare -metric AE -fuzz 50% crop10.jpg resources/game10/'.$k.'.jpg /dev/null 2>&1'));
+		$c = trim(shell_exec('compare -metric AE -fuzz 50% /tmp/crop10.jpg resources/game10/'.$k.'.jpg /dev/null 2>&1'));
 		$diffs[$k] = $c;
 		if($c == 0){break;}
 	}
@@ -833,7 +836,7 @@ function tricky_game010($data){
 	asort($diffs);
 	$image = key($diffs);
 
-	copy('game10.jpg','resources/game10/processed/'.$image.'-'.time().'.jpg');
+	copy('/tmp/game10.jpg','resources/game10/processed/'.$image.'-'.time().'.jpg');
 
 	if($diffs[$image] > 0){
 		if($diffs[$image] > 100){
@@ -841,11 +844,11 @@ function tricky_game010($data){
 			print_r($diffs);
 
 			echo "\033[0;31mError en juego 10\033[0m".PHP_EOL;
-			copy('crop10.jpg','resources/game10/error/'.time().'.jpg');
+			copy('/tmp/crop10.jpg','resources/game10/error/'.time().'.jpg');
 			return false;
 		}
 		echo 'Cambiar imagen de juego 10:  '.$image.PHP_EOL;
-		copy('crop10.jpg','resources/game10/'.$image.'.jpg');
+		copy('/tmp/crop10.jpg','resources/game10/'.$image.'.jpg');
 	}
 
 	if(preg_match('/<div class="opcio opcio-'.$singles[$image].'" onclick=\'location.href = "([^"]+)/msi',$data['pageContent'],$win)){
@@ -871,7 +874,7 @@ function tricky_game011($data){
 	// Control de errores de pageContent
 	if(!isset($d['pageContent']) || empty($d['pageContent'])){echo date('H:i:s - ').'Error al obtener página: '.__LINE__.PHP_EOL;return false;}
 
-	file_put_contents('game11.jpg',$d['pageContent']);
+	file_put_contents('/tmp/game11.jpg',$d['pageContent']);
 
 	$weights = array(
 		'0001'=>'1',
@@ -938,7 +941,7 @@ function tricky_game011($data){
 
 	$diffs = array();
 	foreach($weights as $k=>$v){
-		$c = trim(shell_exec('compare -metric AE -fuzz 50% game11.jpg resources/game11/'.$k.'.jpg /dev/null 2>&1'));
+		$c = trim(shell_exec('compare -metric AE -fuzz 50% /tmp/game11.jpg resources/game11/'.$k.'.jpg /dev/null 2>&1'));
 		$diffs[$k] = $c;
 		if($c == 0){break;}
 	}
@@ -946,17 +949,17 @@ function tricky_game011($data){
 	asort($diffs);
 	$image = key($diffs);
 
-	copy('game11.jpg','resources/game11/processed/'.$image.'-'.time().'.jpg');
+	copy('/tmp/game11.jpg','resources/game11/processed/'.$image.'-'.time().'.jpg');
 
 	if($diffs[$image] > 0){
 		if($diffs[$image] > 100){
 			//print_r($diffs);
 			echo "\033[0;31mError en juego 11\033[0m".PHP_EOL;
-			copy('game11.jpg','resources/game11/error/'.time().'.jpg');
+			copy('/tmp/game11.jpg','resources/game11/error/'.time().'.jpg');
 			return false;
 		}
 		echo 'Cambiar imagen de juego 11: '.$image.PHP_EOL;
-		copy('game11.jpg','resources/game11/'.$image.'.jpg');		
+		copy('/tmp/game11.jpg','resources/game11/'.$image.'.jpg');		
 	}
 
 	if(preg_match('/bascula-'.$weights[$image].'" onclick=\'location.href = "([^\"]+)/msi',$data['pageContent'],$win)){
@@ -975,7 +978,8 @@ function tricky_game011($data){
 }
 
 /* Cocinar galletas */
-function tricky_cookie($data){
+function tricky_cookie($html){
+	$data = $html;
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 	$url = 'http://www.vendecookies.com/index.php?p=cocinar&r=1';
 	$data = html_petition($url,$data);
@@ -986,6 +990,7 @@ function tricky_cookie($data){
 	// Comprobamos si ha dado error de que no hay suficientes recursos
 	if(preg_match('/imatges\/disseny\/ko-00\.png/msi',$data['pageContent'])){
 		echo 'No tenemos suficientes recursos para cocinar.'.PHP_EOL;
+		file_put_contents('resources/log/notEnoughIngredients-'.time().'.html',$html['pageContent']);
 		return -1;
 	}
 
