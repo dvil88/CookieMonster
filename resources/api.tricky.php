@@ -611,7 +611,7 @@ function tricky_game007($data){
 	preg_match('/desabilitarTeclado=true;\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);
 
 	// Fallo en un 10% de las veces
-	if(rand(0,100)%10 == 0){preg_match('/else{\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);echo 'Provocamos error en el ahorcado'.PHP_EOL;}
+	// if(rand(0,100)%10 == 0){preg_match('/else{\s*location.href = "([^"]+)/msi',$data['pageContent'],$win);echo 'Provocamos error en el ahorcado'.PHP_EOL;}
 
 	$data['cookieFile']['file'] = $GLOBALS['config']['cookie'];
 	$url = 'http://www.vendecookies.com/'.$win[1];
@@ -841,7 +841,7 @@ function tricky_game010($data){
 	if($diffs[$image] > 0){
 		if($diffs[$image] > 100){
 			$diffs = array_slice($diffs,0,10);
-			print_r($diffs);
+			// print_r($diffs);
 
 			echo "\033[0;31mError en juego 10\033[0m".PHP_EOL;
 			copy('/tmp/crop10.jpg','resources/game10/error/'.time().'.jpg');
