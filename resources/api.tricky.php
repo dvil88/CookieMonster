@@ -338,7 +338,7 @@ function solveCaptcha2($imagePath = ''){
 	}
 
 	/* Cleanup */
-	$perc = 60;
+	$perc = 66;
 	for($y=0;$y<$h;$y++){
 		for($x=0;$x<$w;$x++){
 			$c = $pixel_getColor($imageclean,$x,$y);
@@ -354,7 +354,12 @@ function solveCaptcha2($imagePath = ''){
 	if(preg_match('/ERROR pnm.c L[0-9]*: unexpected EOF/',$result)){
 		echo 'CAPTCHA_ERROR';exit;
 	}
-	$result = preg_replace('/[^a-z0-9]+/i','',$result);	
+	$result = preg_replace('/[^a-z0-9]+/i','',$result);
+
+	/* Guardamos captchas procesados */
+	copy('/tmp/captcha.jpg','resources/captchas/processed/'.$result.'.jpg');
+	copy('/tmp/captcha_p.png','resources/captchas/processed/'.$result.'_p.png');
+
 	if(strlen($result) != 6){
 		copy('/tmp/captcha.jpg','resources/captchas/error/'.$result.'.jpg');
 		copy('/tmp/captcha_p.png','resources/captchas/error/'.$result.'_p.png');
