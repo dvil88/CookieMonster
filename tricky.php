@@ -12,6 +12,7 @@ $GLOBALS['config'] = array(
 );
 $GLOBALS['totalCookies'] = 0;
 $GLOBALS['farm'] = false;
+$GLOBALS['ingredientFarm'] = false;
 
 if($_SERVER['argc'] == 1){tricky_showUsage();exit;}
 
@@ -99,6 +100,20 @@ foreach($argv as $k=>$c){
 			case '--farm':
 				$GLOBALS['farm'] = true;
 				break;
+			case '-i':
+				if(!isset($argv[$k+1]) || (isset($argv[$k+1]) && $argv[$k+1][0] == '-')){
+					echo 'ERROR! - You have to specify an ingredient',PHP_EOL;
+					tricky_showUsage();
+					exit;
+				}
+				$ingredients = array('chocolate'=>'2','mantequilla'=>'3','azucar'=>'4','harina'=>'5','huevos'=>'6');
+				if(!isset($ingredients[$argv[$k+1]])){
+					echo 'ERROR! - You have to specify a valid ingredient',PHP_EOL;
+					tricky_showUsage();
+					exit;
+				}
+				$GLOBALS['ingredientFarm'] = $ingredients[$argv[$k+1]];
+				break;
 		}
 	}
 }
@@ -120,6 +135,28 @@ switch($command){
 	case 'stats':
 		// tricky_getStats
 		break;
+}
+
+
+
+function tricky_showUsage(){
+	echo
+	"Usage:\tphp ",$_SERVER['argv'][0],' -[CS] username'.PHP_EOL.
+		  "\tphp ",$_SERVER['argv'][0],' -R username password email [referer]'.PHP_EOL.
+
+	PHP_EOL.
+	'Commands:'.PHP_EOL.
+	'Either long or short options are allowed.'.PHP_EOL.
+	" -R, --register username password email [referer]\n\t\t\t\tRegister a new user".PHP_EOL.
+	" -C, --cook username\t\tCook ingredients and cookies".PHP_EOL.
+	" -S, --stats username\t\tGet cookie stats".PHP_EOL.
+	PHP_EOL.
+	'Options:'.PHP_EOL.
+	" -p, --proxy host:port\t\tUse proxy".PHP_EOL.
+	"     --socks5\t\t\tUse SOCK5 proxy, tor network".PHP_EOL.
+	" -f, --farm\t\t\tFarm ingredients only and don't cook cookies".PHP_EOL.
+	" -i ingredient\t\t\tFarm only this ingredient: chocolate, mantequilla, azucar, harina, huevos".PHP_EOL
+	;
 }
 
 ?>

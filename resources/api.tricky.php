@@ -134,7 +134,7 @@ function tricky_cook($user,$pass){
 	$stats = tricky_getStats();
 	if(!$stats){return;}
 
-	$canCook = false;
+	$canCook = -1;
 	do{
 		// Esperamos 1 segundo antes de ir a cocinar
 		sleep(1);
@@ -162,6 +162,9 @@ function tricky_cook($user,$pass){
 		// Buscamos los ingredientes que nos faltan para hacer galletas
 		if(preg_match_all('/class="ingredient[^"]+'.($canCook != -1 ? 'falta' : '').'" id="ing-([0-9]+)/msi',$data['pageContent'],$m) || $happyHour !== false){
 			// Faltan ingredientes para cocinar galletas
+
+			// Si estamos farmeando un solo ingrediente, forzamos a obtener solo ese
+			if($GLOBALS['ingredientFarm'] !== false){$m[1] = array($GLOBALS['ingredientFarm']);}
 
 			// Si hay happy hour de un ingrediente lo único que hacemos es obtener ese ingrediente
 			if($happyHour !== false){$m[1] = array($happyHour);}
@@ -247,25 +250,6 @@ function tricky_cook($user,$pass){
 			$canCook = tricky_cookie($data);
 		}
 	}while(true);
-}
-
-function tricky_showUsage(){
-	echo
-	"Usage:\tphp ",$_SERVER['argv'][0],' -[CS] username'.PHP_EOL.
-		  "\tphp ",$_SERVER['argv'][0],' -R username password email [referer]'.PHP_EOL.
-
-	PHP_EOL.
-	'Commands:'.PHP_EOL.
-	'Either long or short options are allowed.'.PHP_EOL.
-	" -R, --register username password email [referer]\n\t\t\t\tRegister a new user".PHP_EOL.
-	" -C, --cook username\t\tCook ingredients and cookies".PHP_EOL.
-	" -S, --stats username\t\tGet cookie stats".PHP_EOL.
-	PHP_EOL.
-	'Options:'.PHP_EOL.
-	" -p, --proxy host:port\t\tUse proxy".PHP_EOL.
-	"     --socks5\t\t\tUse SOCK5 proxy, tor network".PHP_EOL.
-	" -f, --farm\t\t\tFarm ingredients only and don't cook cookies".PHP_EOL
-	;
 }
 
 function solveCaptcha(){
