@@ -134,7 +134,7 @@ function tricky_cook($user,$pass){
 	$stats = tricky_getStats();
 	if(!$stats){return;}
 
-	$canCook = -1;
+	$canCook = false;
 	do{
 		// Esperamos 1 segundo antes de ir a cocinar
 		sleep(1);
