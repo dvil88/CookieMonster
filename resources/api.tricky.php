@@ -346,6 +346,24 @@ function solveCaptcha2($imagePath = ''){
 			imagesetpixel($imageclean,$x,$y,$black);
 		}
 	}
+	for($y=0;$y<$h;$y++){
+		for($x=0;$x<$w;$x++){
+			$c1 = $pixel_getColor($imageclean,$x,$y);
+			if($pixel_isBlank($c1)){continue;}
+			$count = 8;
+			$cl1 = $pixel_getColor($imageclean,$x-1,$y-1);if($pixel_isBlank($cl1)){$count--;}
+			$cl2 = $pixel_getColor($imageclean,$x,$y-1);if($pixel_isBlank($cl2)){$count--;}
+			$cl3 = $pixel_getColor($imageclean,$x+1,$y-1);if($pixel_isBlank($cl3)){$count--;}
+
+			$cl4 = $pixel_getColor($imageclean,$x-1,$y);if($pixel_isBlank($cl4)){$count--;}
+			$cl6 = $pixel_getColor($imageclean,$x+1,$y);if($pixel_isBlank($cl6)){$count--;}
+
+			$cl7 = $pixel_getColor($imageclean,$x-1,$y+1);if($pixel_isBlank($cl7)){$count--;}
+			$cl8 = $pixel_getColor($imageclean,$x,$y+1);if($pixel_isBlank($cl8)){$count--;}
+			$cl9 = $pixel_getColor($imageclean,$x+1,$y+1);if($pixel_isBlank($cl9)){$count--;}
+			if($count < 1){imagesetpixel($imageclean,$x,$y,$white);continue;}
+		}
+	}
 
 	imagepng($imageclean,'/tmp/captcha_p.png');
 	imagedestroy($imageclean);
